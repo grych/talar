@@ -4,7 +4,8 @@ defmodule Talar.Paths.Directory do
 
   schema "directories" do
     field :dir, :string
-    #has_many(:directories, Talar.Directory)
+    has_many :directories, Talar.Paths.Directory
+    belongs_to :directory, Talar.Paths.Directory
 
     timestamps(type: :utc_datetime)
   end
@@ -14,5 +15,6 @@ defmodule Talar.Paths.Directory do
     directory
     |> cast(attrs, [:dir])
     |> validate_required([:dir])
+    |> validate_length(:dir, min: 1, max: 4096)
   end
 end

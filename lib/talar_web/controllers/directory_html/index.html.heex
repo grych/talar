@@ -1,0 +1,23 @@
+<.header>
+  Listing Directories
+  <:actions>
+    <.link href={~p"/directories/new"}>
+      <.button>New Directory</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/directories/#{&1}")}>
+  <:col :let={directory} label="Dir"><%= directory.dir %></:col>
+  <:action :let={directory}>
+    <div class="sr-only">
+      <.link navigate={~p"/directories/#{directory}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/directories/#{directory}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={directory}>
+    <.link href={~p"/directories/#{directory}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

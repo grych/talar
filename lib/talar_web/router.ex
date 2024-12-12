@@ -20,6 +20,7 @@ defmodule TalarWeb.Router do
     # get "/", PageController, :
     get "/", UserController, :index
     resources "/users", UserController
+    resources "/directories", DirectoryController
     get "/signup", UserController, :new, as: :signup
   end
 

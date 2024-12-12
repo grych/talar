@@ -2,7 +2,7 @@
 
 This is a new version of Tarkin server, which was build in Ruby on Rails.
 
-This is not working version, I will send an mail to [http://elixirforum.com](http://elixirforum.com)
+This is not working version. I will send an mail to [http://elixirforum.com](http://elixirforum.com)
 
 To start your Phoenix server:
 

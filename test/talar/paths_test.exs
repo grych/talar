@@ -12,9 +12,9 @@ defmodule Talar.PathsTest do
 
     test "list_directories/0 returns all directories" do
       directory = directory_fixture()
-      #IO.inspect([directory])
-      [ _ | tail] = Paths.list_directories()
-      #IO.inspect(tail)
+      # IO.inspect([directory])
+      [_ | tail] = Paths.list_directories()
+      # IO.inspect(tail)
       assert tail == [directory]
     end
 

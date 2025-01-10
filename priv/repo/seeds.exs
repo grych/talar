@@ -11,15 +11,15 @@
 # and so on) as they will fail if something goes wrong.
 # alias Talar.Repo
 alias Talar.Paths.Directory
-#alias Talar.Paths
+# alias Talar.Paths
 
 require Logger
 
 Talar.Repo.delete_all(Directory)
 Talar.Repo.insert!(%Directory{dir: "/"})
 # , directory_id: inserted.id})
-#{:ok, directory} = Paths.create_directory(%{path: "/"})
-#Logger.info("directory: #{inspect(directory)}")
+# {:ok, directory} = Paths.create_directory(%{path: "/"})
+# Logger.info("directory: #{inspect(directory)}")
 # if Directory.is_root(directory) do
 #   Logger.info("Directory: root")
 #   Logger.info("PATH: #{inspect(directory.id)}")

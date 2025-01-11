@@ -42,6 +42,22 @@ defmodule Talar.PathsTest do
       assert directory.dir == "some updated dir"
     end
 
+    test "list_dir/1 will valid the given directory" do
+      update_attrs = "/"
+
+#      IO.inspect(Paths.list_dirs(update_attrs))
+
+      assert %Directory{} = directory = Paths.list_dirs(update_attrs)
+      assert directory.dir == "/"
+    end
+
+    test "list_dir/1 will not be valid the nonexistent directory" do
+      update_attrs = "/drab"
+
+      # it should be nil
+      refute nil = Paths.list_dirs(update_attrs)
+    end
+
     test "update_directory/2 with invalid data returns error changeset" do
       directory = directory_fixture()
       assert {:error, %Ecto.Changeset{}} = Paths.update_directory(directory, @invalid_attrs)

@@ -22,6 +22,22 @@ defmodule Talar.Paths do
   end
 
   @doc """
+  Returns the some list of directories.
+
+  ## Examples
+
+      iex> list_dirs("/drab/elixir")
+      [%Directory{}, ...]
+
+  """
+  def list_dirs(dir) do
+    Directory |> Repo.get_by(dir: dir)
+    #directory
+    #  #|> Directory.changeset(dir)
+    #  |> Repo.get_by(dir: dir)
+  end
+
+  @doc """
   Gets a single directory.
 
   Raises `Ecto.NoResultsError` if the Directory does not exist.

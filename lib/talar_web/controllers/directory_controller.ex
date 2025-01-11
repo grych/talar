@@ -4,7 +4,10 @@ defmodule TalarWeb.DirectoryController do
   alias Talar.Paths
   alias Talar.Paths.Directory
 
-  def index(conn, _params) do
+  require Logger
+
+  def index(conn, params) do
+    Logger.info("#{inspect(params)}")
     directories = Paths.list_directories()
     render(conn, :index, directories: directories)
   end

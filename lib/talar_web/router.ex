@@ -17,11 +17,11 @@ defmodule TalarWeb.Router do
   scope "/", TalarWeb do
     pipe_through :browser
 
-    # get "/", PageController, :
     get "/", UserController, :index
     resources "/users", UserController
-    resources "/directories", DirectoryController
     get "/signup", UserController, :new, as: :signup
+    resources "/directories", DirectoryController, only: [:index, :show, :new, :edit, :delete, :update, :create]
+    get "/dir/*dir", DirectoryController, :index
   end
 
   # Other scopes may use custom stacks.

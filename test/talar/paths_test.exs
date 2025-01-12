@@ -47,7 +47,7 @@ defmodule Talar.PathsTest do
 
 #      IO.inspect(Paths.list_dirs(update_attrs))
 
-      assert %Directory{} = directory = Paths.list_dirs(update_attrs)
+      directory = List.first(Paths.list_dirs(update_attrs))
       assert directory.dir == "/"
     end
 
@@ -55,7 +55,7 @@ defmodule Talar.PathsTest do
       update_attrs = "/drab"
 
       # it should be nil
-      refute nil = Paths.list_dirs(update_attrs)
+      assert [] = Paths.list_dirs(update_attrs)
     end
 
     test "update_directory/2 with invalid data returns error changeset" do

@@ -7,9 +7,19 @@ defmodule TalarWeb.DirectoryController do
   require Logger
 
   def index(conn, params) do
+    %{"dir" => params} = params
+    params = "/" <> Enum.join(params, "/")
     Logger.info("#{inspect(params)}")
-    directories = Paths.list_directories()
-    render(conn, :index, directories: directories)
+    directories = Paths.list_dirs(params)
+    Logger.info("#{inspect(directories)}")
+    case directories do
+      [] ->
+        conn
+        |> put_flash(:error, "Cannot change directory to " <> params)
+        |> redirect(to: ~p"/dir")
+      [dir] -> render(conn, :index, directories: [dir])
+    end
+    #render(conn, :index, directories: directories)
   end
 
   def new(conn, _params) do

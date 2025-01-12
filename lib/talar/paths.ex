@@ -31,7 +31,16 @@ defmodule Talar.Paths do
 
   """
   def list_dirs(dir) do
-    Directory |> Repo.get_by(dir: dir)
+#    Directory
+#    |> where([d], d.dir == ^dir)
+#    |> select([d], {d.dir})
+#    |> Repo.all
+    query =
+      from Directory,
+      where: [dir: ^dir],
+      select: [:id, :dir]
+    Repo.all(query)
+    #Directory |> Repo.get_by(dir: dir)
     #directory
     #  #|> Directory.changeset(dir)
     #  |> Repo.get_by(dir: dir)

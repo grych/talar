@@ -22,15 +22,15 @@ defmodule Talar.Paths do
   end
 
   @doc """
-  Returns the some list of directories.
+  Returns the parent directory.
 
   ## Examples
 
-      iex> list_dirs("/drab/elixir")
+      iex> parent_dir("/drab/elixir")
       [%Directory{}, ...]
 
   """
-  def list_dirs(dir) do
+  def parent_dir(dir) do
 #    Directory
 #    |> where([d], d.dir == ^dir)
 #    |> select([d], {d.dir})
@@ -40,11 +40,25 @@ defmodule Talar.Paths do
       where: [dir: ^dir],
       select: [:id, :dir]
     Repo.all(query)
-    #Directory |> Repo.get_by(dir: dir)
-    #directory
-    #  #|> Directory.changeset(dir)
-    #  |> Repo.get_by(dir: dir)
   end
+
+  @doc """
+  Returns the parent directory.
+
+  ## Examples
+
+      iex> list_dir("/drab/elixir")
+      [%Directory{}, ...]
+
+  """
+  def list_dir(dir) do
+    query =
+      from Directory,
+      where: [directory_id: ^dir.id],
+      select: [:id, :dir]
+    Repo.all(query)
+  end
+
 
   @doc """
   Gets a single directory.

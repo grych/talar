@@ -1,5 +1,9 @@
+<section>
+  <%= @parent_dir %>
+</section>
 <.header>
-  Listing Directories
+  Listing Directories for <%= @parent_dir %>
+
   <:actions>
     <.link href={~p"/directories/new"}>
       <.button>New Directory</.button>
@@ -8,7 +12,12 @@
 </.header>
 
 <.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/directories/#{&1}")}>
-  <:col :let={directory} label="Dir"><%= directory.dir %></:col>
+  <:col :let={directory} label="Dir">
+    <%= directory.id %>
+  </:col>
+  <:col :let={directory} label="Dir">
+    <td><a href={"/dir#{directory.dir}"}><%= directory.dir %></a></td>
+  </:col>
   <:action :let={directory}>
     <div class="sr-only">
       <.link navigate={~p"/directories/#{directory}"}>Show</.link>

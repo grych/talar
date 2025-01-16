@@ -42,20 +42,18 @@ defmodule Talar.PathsTest do
       assert directory.dir == "some updated dir"
     end
 
-    test "list_dir/1 will valid the given directory" do
+    test "parent_dir/1 will valid the given directory" do
       update_attrs = "/"
 
-#      IO.inspect(Paths.list_dirs(update_attrs))
-
-      directory = List.first(Paths.list_dirs(update_attrs))
+      directory = List.first(Paths.parent_dir(update_attrs))
       assert directory.dir == "/"
     end
 
-    test "list_dir/1 will not be valid the nonexistent directory" do
+    test "parent_dir/1 will not be valid the nonexistent directory" do
       update_attrs = "/drab"
 
       # it should be nil
-      assert [] = Paths.list_dirs(update_attrs)
+      assert [] = Paths.parent_dir(update_attrs)
     end
 
     test "update_directory/2 with invalid data returns error changeset" do

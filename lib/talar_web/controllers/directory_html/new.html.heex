@@ -1,8 +1,12 @@
 <.header>
-  New Directory
+  New Directory in <%= @parent_dir %>
   <:subtitle>Use this form to manage directory records in your database.</:subtitle>
 </.header>
 
-<.directory_form changeset={@changeset} action={~p"/directories"} />
+<.form :let={f}  action={~p"/directories/"} method="POST">
+  <.input field={f[:dir]} type="text" label="Dir" />
+  <.input type="text" field={f[:directory_id]} value={@parent_dir} label="Parent dir"/>
+  <.button>SAVE Directory</.button>
+</.form>
 
 <.back navigate={~p"/directories"}>Back to directories</.back>

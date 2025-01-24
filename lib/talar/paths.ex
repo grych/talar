@@ -5,9 +5,8 @@ defmodule Talar.Paths do
 
   import Ecto.Query, warn: false
   alias Talar.Repo
-
   alias Talar.Paths.Directory
-
+  require Logger
   @doc """
   Returns the list of directories.
 
@@ -55,7 +54,7 @@ defmodule Talar.Paths do
     query =
       from Directory,
       where: [directory_id: ^dir.id],
-      select: [:id, :dir]
+      select: [:id, :dir, :directory_id]
     Repo.all(query)
   end
 
@@ -89,6 +88,7 @@ defmodule Talar.Paths do
 
   """
   def create_directory(attrs \\ %{}) do
+    Logger.info("CREATE #{inspect(attrs)}")
     %Directory{}
     |> Directory.changeset(attrs)
     |> Repo.insert()

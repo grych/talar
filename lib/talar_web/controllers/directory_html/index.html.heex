@@ -5,9 +5,12 @@
   Listing Directories for <%= @parent_dir %>
 
   <:actions>
-    <.link href={~p"/directories/new"}>
-      <.button>New Directory</.button>
-    </.link>
+    <.form :let={f}  action={~p"/dir/new"} method="GET">
+      <input type="hidden" name="parent_dir" value={@parent_dir}>
+      <!-- <.link href={~p"/directories/#{@parent_dir}/new?parent_dir=#{(@parent_dir)}"}> -->
+        <.button>New Directory</.button>
+      <!-- </.link> -->
+    </.form>
   </:actions>
 </.header>
 

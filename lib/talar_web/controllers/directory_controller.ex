@@ -6,10 +6,10 @@ defmodule TalarWeb.DirectoryController do
 
   require Logger
 
-  def index(conn, parent_dirs) do
-    %{"dir" => parent_dirs} = parent_dirs
-    Logger.info("#{inspect(parent_dirs)}")
-    dirs = "/" <> Enum.join(parent_dirs, "/")
+  def index(conn, parent_dir) do
+    %{"dir" => parent_dir} = parent_dir
+    Logger.info("PARENT_DIR #{inspect(parent_dir)}")
+    dirs = "/" <> Enum.join(parent_dir, "/")
     Logger.info("#{inspect(dirs)}")
     directories = Paths.parent_dir(dirs)
     Logger.info("#{inspect(directories)}")
@@ -19,22 +19,35 @@ defmodule TalarWeb.DirectoryController do
         |> put_flash(:error, "Cannot change directory to " <> dirs)
         |> redirect(to: ~p"/dir")
       [directory] ->
-        render(conn, :index, directories: Paths.list_dir(directory), parent_dir: parent_dirs)
+        render(conn, :index, directories: Paths.list_dir(directory), parent_dir: dirs)
     end
   end
 
-  def new(conn, _dirs) do
-    changeset = Paths.change_directory(%Directory{})
-    render(conn, :new, changeset: changeset)
+  def new(conn, parent_dir) do
+    Logger.info("SECOND PARENT #{inspect(parent_dir)}")
+    %{"parent_dir" => parent_dir} = parent_dir
+    parent_dir = Paths.parent_dir(parent_dir)
+    case parent_dir do
+      [] ->
+        conn
+        |> put_flash(:error, "Cannot change directory")
+        |> redirect(to: ~p"/dir")
+      [directories] ->
+        Logger.info("SECOND PARENT 2 #{inspect(directories.id)}")
+        changeset = Paths.change_directory(%Directory{})
+        #changeset = Ecto.Changeset.put_change(changeset, parent_dir: parent_dir)
+        render(conn, :new, parent_dir: directories.id, changeset: changeset)
+    end
   end
 
-  def create(conn, %{"directory" => directory_params}) do
+  def create(conn, directory_params) do
+    #Logger.info("create PARENT #{inspect(parent_dir)}")
+    Logger.info("create directory_params #{inspect(directory_params)}")
     case Paths.create_directory(directory_params) do
       {:ok, directory} ->
         conn
         |> put_flash(:info, "Directory created successfully.")
         |> redirect(to: ~p"/directories/#{directory}")
-
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
     end

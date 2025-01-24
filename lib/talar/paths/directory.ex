@@ -6,6 +6,7 @@ defmodule Talar.Paths.Directory do
     field :dir, :string
     has_many :directories, Talar.Paths.Directory
     belongs_to :directory, Talar.Paths.Directory
+    #field :parent_dir, :integer, virtual: true # , redact: true
 
     timestamps(type: :utc_datetime)
   end
@@ -13,8 +14,8 @@ defmodule Talar.Paths.Directory do
   @doc false
   def changeset(directory, attrs) do
     directory
-    |> cast(attrs, [:dir])
-    |> validate_required([:dir])
+    |> cast(attrs, [:dir, :directory_id])
+    |> validate_required([:dir, :directory_id])
     |> validate_length(:dir, min: 1, max: 4096)
   end
 end

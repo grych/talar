@@ -191,6 +191,7 @@ defmodule TalarWeb.CoreComponents do
   """
   attr :for, :any, required: true, doc: "the data structure for the form"
   attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
+  # attr :parent_dir, :any, default: nil
 
   attr :rest, :global,
     include: ~w(autocomplete name rel action enctype method novalidate target multipart),
@@ -275,7 +276,7 @@ defmodule TalarWeb.CoreComponents do
 
   attr :type, :string,
     default: "text",
-    values: ~w(checkbox color date datetime-local email file month number password
+    values: ~w(hidden checkbox color date datetime-local email file month number password
                range search select tel text textarea time url week)
 
   attr :field, Phoenix.HTML.FormField,

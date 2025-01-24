@@ -2,7 +2,9 @@
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
+
   <.input field={f[:dir]} type="text" label="Dir" />
+  <.input type="text" label="parent_dir" field={@parent_dir} />
   <:actions>
     <.button>Save Directory</.button>
   </:actions>

@@ -52,17 +52,19 @@ defmodule Talar.Paths do
       [%Directory{}, ...]
 
   """
-  def parent_dir2(directory_id) do
+  def parent_dir2(dir_id) do
     #    Directory
     #    |> where([d], d.dir == ^dir)
     #    |> select([d], {d.dir})
     #    |> Repo.all
-    # query =
-    #   from Directory,
-    #   where: [directory_id: ^directory_id],
-    #   select: [:id, :dir]
-    # Repo.all(query)
-    parent_dir2_p(directory_id, "")
+    query =
+      from Directory,
+      where: [id: ^dir_id],
+      select: [:id, :dir]
+    case Repo.all(query) do
+      [] -> ""
+      _ -> parent_dir2_p(dir_id, "/")
+    end
   end
 
   defp parent_dir2_p(dir_id, accumulator) do
@@ -75,12 +77,9 @@ defmodule Talar.Paths do
       [] ->
         accumulator
 
-      [directory] ->
-        if is_nil(directory.directory_id) do
-          accumulator
-        else
-          parent_dir2_p(directory.directory_id, "/" <> directory.dir <> accumulator)
-        end
+      [directory] when is_nil(directory.directory_id) -> accumulator
+
+      [directory] -> parent_dir2_p(directory.directory_id, "/" <> directory.dir <> accumulator)
     end
   end
 

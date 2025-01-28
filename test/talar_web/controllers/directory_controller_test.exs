@@ -7,12 +7,12 @@ defmodule TalarWeb.DirectoryControllerTest do
   @update_attrs %{dir: "some updated dir"}
   @invalid_attrs %{dir: nil}
 
-#  describe "index" do
-#    test "lists all directories", %{conn: conn} do
-#      conn = get(conn, ~p"/directories")
-#      assert html_response(conn, 200) =~ "Listing Directories"
-#    end
-#  end
+  #  describe "index" do
+  #    test "lists all directories", %{conn: conn} do
+  #      conn = get(conn, ~p"/directories")
+  #      assert html_response(conn, 200) =~ "Listing Directories"
+  #    end
+  #  end
 
   describe "new directory" do
     test "renders form", %{conn: conn} do

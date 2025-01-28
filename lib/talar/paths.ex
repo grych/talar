@@ -7,6 +7,7 @@ defmodule Talar.Paths do
   alias Talar.Repo
   alias Talar.Paths.Directory
   require Logger
+
   @doc """
   Returns the list of directories.
 
@@ -30,15 +31,57 @@ defmodule Talar.Paths do
 
   """
   def parent_dir(dir) do
-#    Directory
-#    |> where([d], d.dir == ^dir)
-#    |> select([d], {d.dir})
-#    |> Repo.all
+    #    Directory
+    #    |> where([d], d.dir == ^dir)
+    #    |> select([d], {d.dir})
+    #    |> Repo.all
     query =
       from Directory,
-      where: [dir: ^dir],
-      select: [:id, :dir]
+        where: [dir: ^dir],
+        select: [:id, :dir]
+
     Repo.all(query)
+  end
+
+  @doc """
+  Returns the parent directory.
+
+  ## Examples
+
+      iex> parent_dir2(27)
+      [%Directory{}, ...]
+
+  """
+  def parent_dir2(directory_id) do
+    #    Directory
+    #    |> where([d], d.dir == ^dir)
+    #    |> select([d], {d.dir})
+    #    |> Repo.all
+    # query =
+    #   from Directory,
+    #   where: [directory_id: ^directory_id],
+    #   select: [:id, :dir]
+    # Repo.all(query)
+    parent_dir2_p(directory_id, "")
+  end
+
+  defp parent_dir2_p(dir_id, accumulator) do
+    query =
+      from Directory,
+        where: [id: ^dir_id],
+        select: [:id, :dir, :directory_id]
+
+    case Repo.all(query) do
+      [] ->
+        accumulator
+
+      [directory] ->
+        if is_nil(directory.directory_id) do
+          accumulator
+        else
+          parent_dir2_p(directory.directory_id, "/" <> directory.dir <> accumulator)
+        end
+    end
   end
 
   @doc """
@@ -53,11 +96,11 @@ defmodule Talar.Paths do
   def list_dir(dir) do
     query =
       from Directory,
-      where: [directory_id: ^dir.id],
-      select: [:id, :dir, :directory_id]
+        where: [directory_id: ^dir.id],
+        select: [:id, :dir, :directory_id]
+
     Repo.all(query)
   end
-
 
   @doc """
   Gets a single directory.
@@ -89,6 +132,7 @@ defmodule Talar.Paths do
   """
   def create_directory(attrs \\ %{}) do
     Logger.info("CREATE #{inspect(attrs)}")
+
     %Directory{}
     |> Directory.changeset(attrs)
     |> Repo.insert()

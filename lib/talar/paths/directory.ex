@@ -6,7 +6,7 @@ defmodule Talar.Paths.Directory do
     field :dir, :string
     has_many :directories, Talar.Paths.Directory
     belongs_to :directory, Talar.Paths.Directory
-    #field :parent_dir, :integer, virtual: true # , redact: true
+    # field :parent_dir, :integer, virtual: true # , redact: true
 
     timestamps(type: :utc_datetime)
   end

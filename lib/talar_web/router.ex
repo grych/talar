@@ -20,8 +20,10 @@ defmodule TalarWeb.Router do
     get "/", UserController, :index
     resources "/users", UserController
     get "/signup", UserController, :new, as: :signup
-    get "/dir/new", DirectoryController, :new
-    resources "/directories", DirectoryController, only: [:index, :show, :edit, :delete, :update, :create]
+    # get "/directories/new", DirectoryController,
+    resources "/directories", DirectoryController,
+      only: [:new, :index, :show, :edit, :delete, :update, :create]
+
     get "/dir/*dir", DirectoryController, :index
   end
 

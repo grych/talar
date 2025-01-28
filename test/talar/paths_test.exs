@@ -2,6 +2,7 @@ defmodule Talar.PathsTest do
   use Talar.DataCase
 
   alias Talar.Paths
+  require Logger
 
   describe "directories" do
     alias Talar.Paths.Directory
@@ -54,6 +55,34 @@ defmodule Talar.PathsTest do
 
       # it should be nil
       assert [] = Paths.parent_dir(update_attrs)
+    end
+
+    test "parent_dir2/1 will be valid but return ''" do
+      update_attrs = 600
+      # it should be ""
+      assert "" = Paths.parent_dir2(update_attrs)
+    end
+
+    test "parent_dir2/1 will be valid" do
+      directory = Talar.Repo.insert!(%Directory{dir: "/"})
+      # it should be "/"
+      assert "/" = Paths.parent_dir2(directory.id)
+    end
+
+    test "parent_dir2/1 of two will be valid" do
+      directory = Talar.Repo.insert!(%Directory{dir: "/"})
+      directory = Talar.Repo.insert!(%Directory{dir: "drab", directory_id: directory.id})
+      # it should be "/"
+      assert "/drab" = Paths.parent_dir2(directory.id)
+    end
+
+    test "parent_dir2/1 of three will be valid" do
+      directory = Talar.Repo.insert!(%Directory{dir: "/"})
+      directory = Talar.Repo.insert!(%Directory{dir: "drab", directory_id: directory.id})
+      directory = Talar.Repo.insert!(%Directory{dir: "marmolada", directory_id: directory.id})
+      IO.puts("SECOND PARENT #{inspect(directory)}")
+      # it should be "/"
+      assert "/drab/marmolada" = Paths.parent_dir2(directory.id)
     end
 
     test "update_directory/2 with invalid data returns error changeset" do

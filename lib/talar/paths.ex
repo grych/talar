@@ -4,6 +4,7 @@ defmodule Talar.Paths do
   """
 
   import Ecto.Query, warn: false
+  # alias Hex.Crypto.Encryption
   alias Talar.Repo
   alias Talar.Paths.Directory
   require Logger
@@ -49,7 +50,9 @@ defmodule Talar.Paths do
   ## Examples
 
       iex> parent_dir2(27)
-      [%Directory{}, ...]
+      "/drab/"
+      iex> parent_dir2(-1)
+      ""
 
   """
   def parent_dir2(dir_id) do
@@ -84,21 +87,44 @@ defmodule Talar.Paths do
   end
 
   @doc """
-  Returns the parent directory.
+  Returns the directory.
 
   ## Examples
 
-      iex> list_dir("/drab/elixir")
+      iex> list_dir("/drab/elixir/")
       [%Directory{}, ...]
+      iex> list_dir("")
+      [%Directory{}]
 
   """
   def list_dir(dir) do
-    query =
-      from Directory,
-        where: [directory_id: ^dir.id],
-        select: [:id, :dir, :directory_id]
+    list = dir |> String.split("/", trim: true) |> Enum.reverse()
+    dir_list = for d <- list, into: [] do
+      IO.inspect("DUPA #{d}")
+      query =
+        from Directory,
+          where: [dir: ^d],
+          select: [:id, :dir, :directory_id]
+      case Repo.all(query) do
+        [directories] -> IO.inspect("DUPA2 #{directories.id}"); [directories.id]
+        _ -> IO.inspect("NONE"); ["NONE"]
+      end
+    end
+    IO.inspect("DIR_LIST #{dir_list}")
+    IO.inspect("DIR_LIST #{length(dir_list)}")
 
-    Repo.all(query)
+    if Enum.any?(dir_list, fn x -> x == ["NONE"] end) do
+      IO.inspect("some is NONE")
+    else
+      IO.inspect("FALSE")
+    end
+    # dir
+    # query =
+    #   from Directory,
+    #     where: [directory_id: ^dir.id],
+    #     select: [:id, :dir, :directory_id]
+
+    # Repo.all(query)
   end
 
   @doc """
@@ -130,7 +156,7 @@ defmodule Talar.Paths do
 
   """
   def create_directory(attrs \\ %{}) do
-    Logger.info("CREATE #{inspect(attrs)}")
+    # Logger.info("CREATE #{inspect(attrs)}")
 
     %Directory{}
     |> Directory.changeset(attrs)

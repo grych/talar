@@ -51,7 +51,7 @@ defmodule Talar.PathsTest do
     end
 
     test "parent_dir/1 will not be valid the nonexistent directory" do
-      update_attrs = "/drab"
+      update_attrs = "drab"
 
       # it should be nil
       assert [] = Paths.parent_dir(update_attrs)
@@ -83,6 +83,16 @@ defmodule Talar.PathsTest do
       # IO.puts("SECOND PARENT #{inspect(directory)}")
       # it should be "/"
       assert "/drab/marmolada/" = Paths.parent_dir2(directory.id)
+    end
+
+    test "list_dir/1" do
+      directory = Talar.Repo.insert!(%Directory{dir: "/"})
+      Talar.Repo.insert!(%Directory{dir: "drab", directory_id: directory.id})
+      Talar.Repo.insert!(%Directory{dir: "marmolada", directory_id: directory.id})
+      Talar.Repo.insert!(%Directory{dir: "another_dir", directory_id: directory.id})
+      Talar.Repo.insert!(%Directory{dir: "another_dir2", directory_id: directory.id})
+      # IO.puts("SECOND PARENT #{inspect(directory)}")
+      Paths.list_dir("///drab/marmolada//")
     end
 
     # test "update_directory/2 with invalid data returns error changeset" do

@@ -7,21 +7,32 @@ defmodule TalarWeb.DirectoryController do
   require Logger
 
   def index(conn, parent_dir) do
-    %{"dir" => parent_dir} = parent_dir
-    Logger.info("PARENT_DIR #{inspect(parent_dir)}")
-    dirs = "/" <> Enum.join(parent_dir, "/")
-    Logger.info("DIR: #{inspect(dirs)}")
-    directories = Paths.parent_dir(dirs)
-    Logger.info("DIRECTORY: #{inspect(directories)}")
-
+    Logger.info("FIRST PARENT_DIR #{inspect(parent_dir)}")
+    # %{"dir" => parent_dir} = parent_dir
+    # Logger.info("PARENT_DIR #{inspect(parent_dir)}")
+    # dirs = "/" <> Enum.join(parent_dir, "/")
+    # Logger.info("DIR: #{inspect(dirs)}")
+    # directories = Paths.parent_dir(dirs)
+    # Logger.info("DIRECTORY: #{inspect(directories)}")
+    %{"dir" => dirs} = parent_dir
+    Logger.info("DIRS #{inspect(dirs)}")
+    dirs = if dirs == [] do
+        "/"
+    end
+    Logger.info("SECOND DIRS #{inspect(dirs)}")
+    # directories = Paths.list_dir(dirs)
+    # Logger.info("DIRECTORies #{inspect(directories)}")
+    # directory = %Directory{}
+    directories = Paths.list_dir(dirs)
+    Logger.info("DIRECTORIES #{inspect(directories)}")
     case directories do
-      [] ->
+      "" ->
         conn
         |> put_flash(:error, "Cannot change directory to " <> dirs)
         |> redirect(to: ~p"/dir")
 
-      [directory] ->
-        render(conn, :index, directories: Paths.list_dir(directory), parent_dir: dirs)
+      directories ->
+        render(conn, :index, directories: directories)
     end
   end
 

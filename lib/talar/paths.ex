@@ -103,6 +103,7 @@ defmodule Talar.Paths do
       IO.inspect("DUPA #{d}")
       query =
         from Directory,
+          # here should be somthing like directory_id
           where: [dir: ^d],
           select: [:id, :dir, :directory_id]
       case Repo.all(query) do

@@ -16,7 +16,7 @@ alias Talar.Paths.Directory
 require Logger
 
 Talar.Repo.delete_all(Directory)
-Talar.Repo.insert!(%Directory{dir: "/"})
+Talar.Repo.insert!(%Directory{dir: "/", root: true})
 # , directory_id: inserted.id})
 # {:ok, directory} = Paths.create_directory(%{path: "/"})
 # Logger.info("directory: #{inspect(directory)}")

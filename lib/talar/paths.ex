@@ -129,6 +129,19 @@ defmodule Talar.Paths do
   end
 
   @doc """
+  Gets a root directory.
+
+  ## Examples
+
+      iex> root()
+      %Directory{...}
+  """
+
+  def root() do
+    Repo.get_by(Directory, root: true)
+  end
+
+  @doc """
   Gets a single directory.
 
   Raises `Ecto.NoResultsError` if the Directory does not exist.

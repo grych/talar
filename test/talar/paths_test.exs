@@ -95,6 +95,12 @@ defmodule Talar.PathsTest do
       Paths.list_dir("///drab/marmolada//")
     end
 
+    test "root/0" do
+      directory = Talar.Repo.insert!(%Directory{dir: "/", root: true})
+      # IO.puts("root #{inspect(Paths.root())}")
+      assert ^directory = Paths.root()
+    end
+
     # test "update_directory/2 with invalid data returns error changeset" do
     #   directory = directory_fixture()
     #   assert {:error, %Ecto.Changeset{}} = Paths.update_directory(directory, @invalid_attrs)

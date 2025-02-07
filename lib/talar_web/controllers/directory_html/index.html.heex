@@ -1,26 +1,14 @@
-<section>
-  <%= @parent_dir %>
-</section>
 <.header>
-  Listing Directories for <%= @parent_dir %>
-
+  Listing Directories for <%= @dir %>
   <:actions>
-    <.form :let={f} action={~p"/directories/new"} method="GET">
-      <input type="hidden" name="parent_dir" value={@parent_dir} />
-      <!-- <.link href={~p"/directories/#{@parent_dir}/new?parent_dir=#{(@parent_dir)}"}> -->
+    <.link href={~p"/directories/new"}>
       <.button>New Directory</.button>
-      <!-- </.link> -->
-    </.form>
+    </.link>
   </:actions>
 </.header>
 
-<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/directories/#{&1}")}>
-  <:col :let={directory} label="Dir">
-    <%= directory.id %>
-  </:col>
-  <:col :let={directory} label="Dir">
-    <td><a href={"/dir/#{directory.dir}"}><%= directory.dir %></a></td>
-  </:col>
+<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/dir/#{&1}")}>
+  <:col :let={directory} label="Path"><%= directory.path %></:col>
   <:action :let={directory}>
     <div class="sr-only">
       <.link navigate={~p"/directories/#{directory}"}>Show</.link>

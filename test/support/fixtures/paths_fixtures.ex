@@ -11,8 +11,7 @@ defmodule Talar.PathsFixtures do
     {:ok, directory} =
       attrs
       |> Enum.into(%{
-        dir: "some dir",
-        root: true
+        path: "some path"
       })
       |> Talar.Paths.create_directory()
 

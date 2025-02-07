@@ -2,12 +2,13 @@ defmodule Talar.Paths.Directory do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:path, :string, autogenerate: false}
+  @derive {Phoenix.Param, key: :path}
+  @foreign_key_type :string
   schema "directories" do
-    field :dir, :string
-    has_many :directories, Talar.Paths.Directory
-    belongs_to :directory, Talar.Paths.Directory
-    field :parent_dir, :integer, virtual: true # , redact:
-    field :root, :boolean
+    # has_many :directories, Talar.Paths.Directory, foreign_key: :directory_path
+    # belongs_to :directory, Talar.Paths.Directory
+    field :directory_path, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -15,8 +16,7 @@ defmodule Talar.Paths.Directory do
   @doc false
   def changeset(directory, attrs) do
     directory
-    |> cast(attrs, [:dir, :directory_id])
-    |> validate_required([:dir, :directory_id])
-    |> validate_length(:dir, min: 1, max: 4096)
+    |> cast(attrs, [:path])
+    |> validate_required([:path])
   end
 end

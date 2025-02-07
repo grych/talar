@@ -3,16 +3,16 @@ defmodule TalarWeb.DirectoryControllerTest do
 
   import Talar.PathsFixtures
 
-  @create_attrs %{dir: "some dir"}
-  @update_attrs %{dir: "some updated dir"}
-  @invalid_attrs %{dir: nil}
+  @create_attrs %{path: "some path"}
+  @update_attrs %{path: "some updated path"}
+  @invalid_attrs %{path: nil}
 
-  #  describe "index" do
-  #    test "lists all directories", %{conn: conn} do
-  #      conn = get(conn, ~p"/directories")
-  #      assert html_response(conn, 200) =~ "Listing Directories"
-  #    end
-  #  end
+  describe "index" do
+    test "lists all directories", %{conn: conn} do
+      conn = get(conn, ~p"/directories")
+      assert html_response(conn, 200) =~ "Listing Directories"
+    end
+  end
 
   describe "new directory" do
     test "renders form", %{conn: conn} do
@@ -55,7 +55,7 @@ defmodule TalarWeb.DirectoryControllerTest do
       assert redirected_to(conn) == ~p"/directories/#{directory}"
 
       conn = get(conn, ~p"/directories/#{directory}")
-      assert html_response(conn, 200) =~ "some updated dir"
+      assert html_response(conn, 200) =~ "some updated path"
     end
 
     test "renders errors when data is invalid", %{conn: conn, directory: directory} do

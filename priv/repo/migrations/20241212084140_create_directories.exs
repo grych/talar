@@ -2,9 +2,9 @@ defmodule Talar.Repo.Migrations.CreateDirectories do
   use Ecto.Migration
 
   def change do
-    create table(:directories) do
-      add :dir, :string
-      add :directory_id, references(:directories, on_delete: :delete_all)
+    create table(:directories, primary_key: false) do
+      add :path, :string, primary_key: true, size: 4096
+      add :directory_path, references(:directories, type: :string, on_delete: :delete_all, column: :path), size: 4096
 
       timestamps(type: :utc_datetime)
     end

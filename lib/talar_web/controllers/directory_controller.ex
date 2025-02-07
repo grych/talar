@@ -4,61 +4,33 @@ defmodule TalarWeb.DirectoryController do
   alias Talar.Paths
   alias Talar.Paths.Directory
 
-  require Logger
-
-  def index(conn, parent_dir) do
-    Logger.info("FIRST PARENT_DIR #{inspect(parent_dir)}")
-    # %{"dir" => parent_dir} = parent_dir
-    # Logger.info("PARENT_DIR #{inspect(parent_dir)}")
-    # dirs = "/" <> Enum.join(parent_dir, "/")
-    # Logger.info("DIR: #{inspect(dirs)}")
-    # directories = Paths.parent_dir(dirs)
-    # Logger.info("DIRECTORY: #{inspect(directories)}")
-    %{"dir" => dirs} = parent_dir
-    Logger.info("DIRS #{inspect(dirs)}")
-    dirs = if dirs == [] do
-        "/"
-    end
-    Logger.info("SECOND DIRS #{inspect(dirs)}")
-    # directories = Paths.list_dir(dirs)
-    # Logger.info("DIRECTORies #{inspect(directories)}")
-    # directory = %Directory{}
-    directories = Paths.list_dir(dirs)
-    Logger.info("DIRECTORIES #{inspect(directories)}")
-    case directories do
-      "" ->
-        conn
-        |> put_flash(:error, "Cannot change directory to " <> dirs)
-        |> redirect(to: ~p"/dir")
-
-      directories ->
-        render(conn, :index, directories: directories)
+  def index(conn, dir) do
+    %{"dir" => d} = dir
+    IO.puts(" #{inspect(d)}")
+    # directories = Paths.list_directories(d)
+    d = Enum.join(d, "/")
+    IO.puts(" #{inspect(d)}")
+    d = "/" <> d
+    IO.puts(" #{inspect(d)}")
+    directories = Paths.list_directories(d)
+    if directories == [] do
+      IO.puts("  DIRECTORIES!!!  #{inspect(directories)}")
+      conn
+      |> put_flash(:error, "Cannot change directory to " <> d)
+      |> redirect(to: ~p"/dir")
+    else
+      IO.puts("  DIRECTORIES!!!@@@@@@@@@@@@@@@@@@@@@@  #{inspect(directories)}")
+      render(conn, :index, directories: directories, dir: d)
     end
   end
 
-  def new(conn, parent_dir) do
-    Logger.info("SECOND PARENT #{inspect(parent_dir)}")
-    %{"parent_dir" => parent_dir} = parent_dir
-    parent_dir = Paths.parent_dir(parent_dir)
-
-    case parent_dir do
-      [] ->
-        conn
-        |> put_flash(:error, "Cannot change directory")
-        |> redirect(to: ~p"/dir")
-
-      [directories] ->
-        Logger.info("SECOND PARENT 2 #{inspect(directories.id)}")
-        changeset = Paths.change_directory(%Directory{})
-        # changeset = Ecto.Changeset.put_change(changeset, parent_dir: parent_dir)
-        render(conn, :new, parent_dir: directories.id, changeset: changeset)
-    end
+  @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
+  def new(conn, _params) do
+    changeset = Paths.change_directory(%Directory{})
+    render(conn, :new, changeset: changeset)
   end
 
-  def create(conn, directory_params) do
-    # Logger.info("create PARENT #{inspect(parent_dir)}")
-    Logger.info("create directory_params #{inspect(directory_params)}")
-
+  def create(conn, %{"directory" => directory_params}) do
     case Paths.create_directory(directory_params) do
       {:ok, directory} ->
         conn

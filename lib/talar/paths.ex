@@ -21,21 +21,28 @@ defmodule Talar.Paths do
     Repo.all(Directory)
   end
 
-  @doc """
-  Returns the list of directories in the current directory (parent_dir)
+   @doc """
+  Returns the list of directories of the parent dir
 
   ## Examples
 
-      iex> list_directories("/")
+      iex> list_directories("/drab")
       [%Directory{}, ...]
 
   """
   def list_directories(directory) do
     # IO.puts("LIST DIR #{inspect(directory)}")
+    # query =
+    #   from Directory,
+    #     where: [path: ^directory],
+    #     select: [:directory_id, :path]
+    directory_id = Repo.get_by(Directory, path: directory).id
+    # IO.puts("dir_id #{inspect(directory_id)}")
     query =
       from Directory,
-        where: [directory_path: ^directory],
-        select: [:path, :directory_path]
+        where: [directory_id: ^directory_id],
+        select: [:id, :directory_id, :path]
+    # IO.puts("query #{inspect(Repo.all(query))}")
     Repo.all(query)
   end
 

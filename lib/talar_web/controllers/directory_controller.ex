@@ -4,27 +4,11 @@ defmodule TalarWeb.DirectoryController do
   alias Talar.Paths
   alias Talar.Paths.Directory
 
-  def index(conn, dir) do
-    %{"dir" => d} = dir
-    IO.puts(" #{inspect(d)}")
-    # directories = Paths.list_directories(d)
-    d = Enum.join(d, "/")
-    IO.puts(" #{inspect(d)}")
-    d = "/" <> d
-    IO.puts(" #{inspect(d)}")
-    directories = Paths.list_directories(d)
-    if directories == [] do
-      IO.puts("  DIRECTORIES!!!  #{inspect(directories)}")
-      conn
-      |> put_flash(:error, "Cannot change directory to " <> d)
-      |> redirect(to: ~p"/dir")
-    else
-      IO.puts("  DIRECTORIES!!!@@@@@@@@@@@@@@@@@@@@@@  #{inspect(directories)}")
-      render(conn, :index, directories: directories, dir: d)
-    end
+  def index(conn, _params) do
+    directories = Paths.list_directories()
+    render(conn, :index, directories: directories)
   end
 
-  @spec new(Plug.Conn.t(), any()) :: Plug.Conn.t()
   def new(conn, _params) do
     changeset = Paths.change_directory(%Directory{})
     render(conn, :new, changeset: changeset)

@@ -1,5 +1,5 @@
 <.header>
-  Listing Directories for <%= @dir %>
+  Listing Directories
   <:actions>
     <.link href={~p"/directories/new"}>
       <.button>New Directory</.button>
@@ -7,8 +7,9 @@
   </:actions>
 </.header>
 
-<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/dir/#{&1}")}>
+<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/directories/#{&1}")}>
   <:col :let={directory} label="Path"><%= directory.path %></:col>
+  <:col :let={directory} label="Directory"><%= directory.directory_id %></:col>
   <:action :let={directory}>
     <div class="sr-only">
       <.link navigate={~p"/directories/#{directory}"}>Show</.link>

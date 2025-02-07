@@ -3,9 +3,9 @@ defmodule TalarWeb.DirectoryControllerTest do
 
   import Talar.PathsFixtures
 
-  @create_attrs %{path: "some path"}
-  @update_attrs %{path: "some updated path"}
-  @invalid_attrs %{path: nil}
+  @create_attrs %{path: "some path", directory_id: 42}
+  @update_attrs %{path: "some updated path", directory_id: 43}
+  @invalid_attrs %{path: nil, directory_id: nil}
 
   describe "index" do
     test "lists all directories", %{conn: conn} do

@@ -18,10 +18,14 @@ defmodule Talar.PathsTest do
 
     test "list_directories/1 returns all directories from the current (parent) dir" do
       directory = Talar.Repo.insert!(%Directory{path: "/drab"})
-      directory = Talar.Repo.insert!(%Directory{path: "/drab/whatever", directory_id: directory.id})
+      directory2 = Talar.Repo.insert!(%Directory{path: "/drab/whatever", directory_id: directory.id})
+      directory3 = Talar.Repo.insert!(%Directory{path: "/drab/whatever2", directory_id: directory.id})
       # IO.inspect(Paths.list_directories("/drab"))
-      [dir] = Paths.list_directories("/drab")
-      assert directory.path == dir.path
+      list_directories = Paths.list_directories("/drab")
+      dir = hd(list_directories)
+      assert directory2.path == dir.path
+      [dir] = tl(list_directories)
+      assert directory3.path == dir.path
     end
 
     test "get_directory!/1 returns the directory with given id" do

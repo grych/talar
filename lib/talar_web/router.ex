@@ -24,7 +24,7 @@ defmodule TalarWeb.Router do
     resources "/directories", DirectoryController,
       only: [:new, :index, :show, :edit, :delete, :update, :create]
 
-    get "/dir/*dir", DirectoryController, :index
+    get "/dir/*dir", DirectoryController, :get_parent
   end
 
   # Other scopes may use custom stacks.

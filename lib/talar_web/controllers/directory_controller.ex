@@ -4,6 +4,17 @@ defmodule TalarWeb.DirectoryController do
   alias Talar.Paths
   alias Talar.Paths.Directory
 
+  def get_parent(conn, params) do
+    # so params have a "dir" inside:
+    #     %{"dir" => ["vaiue1", "value2"]}
+    %{"dir" => dir_list} = params
+    # so we take the dir list, and then move it to the dirs string
+    dirs = "/" <> Enum.join(dir_list, "/")
+    # and voila!
+    directories = Paths.list_directories(dirs)
+    render(conn, :get_parent, directories: directories)
+  end
+
   def index(conn, _params) do
     directories = Paths.list_directories()
     render(conn, :index, directories: directories)

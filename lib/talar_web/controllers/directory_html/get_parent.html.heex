@@ -7,12 +7,13 @@
   </:actions>
 </.header>
 
-<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/dir/#{&1}")}>
+<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/dir/#{&1.path}")}
+    _row_click={fn x -> JS.navigate(~p"/dir/#{x.path}") end}>
   <:col :let={directory} label="Path"><%= directory.path %></:col>
   <:col :let={directory} label="Directory"><%= directory.directory_id %></:col>
   <:action :let={directory}>
-    <div class="sr-only">
-      <.link navigate={~p"/dir/#{directory}"}>Show</.link>
+    <div _class="sr-only">
+      <.link navigate={~p"/dir/#{directory.path}"}>Show</.link>
     </div>
     <.link navigate={~p"/directories/#{directory}/edit"}>Edit</.link>
   </:action>

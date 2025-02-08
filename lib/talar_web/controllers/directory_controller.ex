@@ -9,7 +9,11 @@ defmodule TalarWeb.DirectoryController do
     #     %{"dir" => ["vaiue1", "value2"]}
     %{"dir" => dir_list} = params
     # so we take the dir list, and then move it to the dirs string
-    dirs = "/" <> Enum.join(dir_list, "/")
+    dirs = if dir_list == [] do
+      "/"
+    else
+      Enum.join(dir_list, "/")
+    end
     # and voila!
     directories = Paths.list_directories(dirs)
     render(conn, :get_parent, directories: directories)

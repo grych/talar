@@ -16,20 +16,29 @@ defmodule Talar.Paths.Directory do
   def changeset(directory, attrs) do
     directory
     |> cast(attrs, [:path, :directory_id, :name])
+    |> put_directory_id(attrs)
+    |> put_name()
     |> validate_required([:path, :directory_id])
-    # |> put_name()
   end
 
-  # defp put_name(changeset) do
-  #   # IO.inspect(changeset.assigns)
-  #   name = get_field(changeset, :name)
-  #   IO.inspect(name)
-  #   put_change(changeset, :path, "////" <> name)
-  #   # case changeset do
-  #   #   %Ecto.Changeset{valid?: true, changes: %{path: path}} ->
-  #   #     put_change(changeset, :name, "////" <> path)
-  #   #   _ ->
-  #   #     changeset
-  #   # end
-  # end
+  defp put_name(changeset) do
+    # IO.inspect(changeset.assigns)
+    name = get_field(changeset, :name)
+    name = if name == nil do "" else name end
+    path = get_field(changeset, :path)
+    path = if path == nil do "" else path end
+    IO.inspect(name)
+    put_change(changeset, :path, path <> "/" <> name)
+    # case changeset do
+    #   %Ecto.Changeset{valid?: true, changes: %{path: path}} ->
+    #     put_change(changeset, :name, "////" <> path)
+    #   _ ->
+    #     changeset
+    # end
+  end
+
+  defp put_directory_id(changeset, attrs) do
+    IO.inspect(attrs)
+    changeset
+  end
 end

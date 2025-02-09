@@ -33,17 +33,32 @@ defmodule TalarWeb.DirectoryController do
     render(conn, :index, directories: directories)
   end
 
-  def new(conn, _params) do
-    changeset = Paths.change_directory(%Directory{})
-    render(conn, :new, changeset: changeset)
+  def new(conn, params) do
+    %{"parent_dir" => dirs} = params
+    query =
+      from Directory,
+        where: [path: ^dirs],
+        select: [:id, :directory_id, :path]
+    if (list = Talar.Repo.all(query)) == [] do
+      conn
+      |> put_flash(:error, "Can't change directory to #{dirs}, does not exits.")
+      |> redirect(to: ~p"/dir")
+    else
+      changeset = Paths.change_directory(%Directory{})
+      # whatever, any case contains the same directory_id
+      directory_id = List.first(list).directory_id
+      render(conn, :new, changeset: changeset, parent_dir: dirs, directory_id: directory_id)
+    end
   end
 
   def create(conn, %{"directory" => directory_params}) do
+    IO.inspect(directory_params)
     case Paths.create_directory(directory_params) do
       {:ok, directory} ->
         conn
         |> put_flash(:info, "Directory created successfully.")
-        |> redirect(to: ~p"/directories/#{directory}")
+        # something is wrong
+        |> redirect(to: ~p"/dir/#{directory.path}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)

@@ -7,7 +7,7 @@ defmodule Talar.PathsTest do
   describe "directories" do
     alias Talar.Paths.Directory
 
-    import Talar.PathsFixtures
+    # import Talar.PathsFixtures
 
     @invalid_attrs %{path: nil, directory_id: nil}
 
@@ -29,7 +29,7 @@ defmodule Talar.PathsTest do
     end
 
     test "get_directory!/1 returns the directory with given id" do
-      directory = directory_fixture()
+      directory = Talar.Repo.insert!(%Directory{path: "/drab"})
       assert Paths.get_directory!(directory.id) == directory
     end
 

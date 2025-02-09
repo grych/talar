@@ -22,5 +22,6 @@ defmodule TalarWeb.Gettext do
   """
   use Gettext, otp_app: :talar
   # use Gettext.Backend, otp_app: :talar
+  # use Gettext.Backend, otp_app: :talar
   # use Gettext, backend: Talar.Gettext
 end

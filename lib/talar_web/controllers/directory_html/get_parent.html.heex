@@ -1,18 +1,19 @@
 <.header>
-  Listing Directories
+  Listing Directories on <%= @parent_dir %>
+
   <:actions>
-    <.link href={~p"/directories/new"}>
+    <.link href={~p"/directories/new?parent_dir=#{@parent_dir}"}>
       <.button>New Directory</.button>
     </.link>
   </:actions>
 </.header>
 
-<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/dir/#{&1.path}")}
-    _row_click={fn x -> JS.navigate(~p"/dir/#{x.path}") end}>
+<.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/dir/#{&1.path}")}>
   <:col :let={directory} label="Path"><%= directory.path %></:col>
-  <:col :let={directory} label="Directory"><%= directory.directory_id %></:col>
+  <:col :let={directory} label="ID directory"><%= directory.directory_id %></:col>
+  <:col :let={directory} label="Name (virtual)"><%= directory.name %></:col>
   <:action :let={directory}>
-    <div _class="sr-only">
+    <div class="sr-only">
       <.link navigate={~p"/dir/#{directory.path}"}>Show</.link>
     </div>
     <.link navigate={~p"/directories/#{directory}/edit"}>Edit</.link>

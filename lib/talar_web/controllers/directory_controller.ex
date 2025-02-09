@@ -4,6 +4,8 @@ defmodule TalarWeb.DirectoryController do
   alias Talar.Paths
   alias Talar.Paths.Directory
 
+  import Ecto.Query, warn: false
+
   def get_parent(conn, params) do
     # so params have a "dir" inside:
     #     %{"dir" => ["vaiue1", "value2"]}
@@ -14,9 +16,16 @@ defmodule TalarWeb.DirectoryController do
     else
       Enum.join(dir_list, "/")
     end
-    # and voila!
-    directories = Paths.list_directories(dirs)
-    render(conn, :get_parent, directories: directories)
+    # we are checking if it exists?
+    query = from d in Directory, where: d.path == ^dirs
+    if Talar.Repo.exists?(query) do
+      directories = Paths.list_directories(dirs)
+      render(conn, :get_parent, directories: directories, parent_dir: dirs)
+    else
+      conn
+      |> put_flash(:error, "Can't change directory to #{dirs}.")
+      |> redirect(to: ~p"/dir")
+    end
   end
 
   def index(conn, _params) do

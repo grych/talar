@@ -43,7 +43,15 @@ defmodule Talar.Paths do
         where: [directory_id: ^directory_id],
         select: [:id, :directory_id, :path]
     # IO.puts("query #{inspect(Repo.all(query))}")
-    Repo.all(query)
+    query
+    |> Repo.all()
+    |> Enum.map(&add_name/1)
+  end
+
+  defp add_name(%Directory{} = directory) do
+    path = String.split(directory.path, "/")
+    path = Enum.reverse(path)
+    %{directory | name: List.first(path)}
   end
 
   @doc """

@@ -18,6 +18,7 @@ defmodule TalarWeb.CoreComponents do
 
   alias Phoenix.LiveView.JS
   import TalarWeb.Gettext
+  # use Gettext, backend: Talar.Gettext
 
   @doc """
   Renders a modal.

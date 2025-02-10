@@ -9,9 +9,9 @@
 </.header>
 
 <.table id="directories" rows={@directories} row_click={&JS.navigate(~p"/dir/#{&1.path}")}>
+  <:col :let={directory} label="Name (virtual)"><%= directory.name %></:col>
   <:col :let={directory} label="Path"><%= directory.path %></:col>
   <:col :let={directory} label="ID directory"><%= directory.directory_id %></:col>
-  <:col :let={directory} label="Name (virtual)"><%= directory.name %></:col>
   <:action :let={directory}>
     <div class="sr-only">
       <.link navigate={~p"/dir/#{directory.path}"}>Show</.link>

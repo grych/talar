@@ -14,31 +14,39 @@ defmodule Talar.Paths.Directory do
 
   @doc false
   def changeset(directory, attrs) do
+    IO.inspect(attrs)
     directory
     |> cast(attrs, [:path, :directory_id, :name])
-    |> put_directory_id(attrs)
-    |> put_name()
     |> validate_required([:path, :directory_id])
+    |> put_path()
+    |> put_name()
   end
 
-  defp put_name(changeset) do
-    # IO.inspect(changeset.assigns)
+  defp put_path(changeset) do
     name = get_field(changeset, :name)
     name = if name == nil do "" else name end
     path = get_field(changeset, :path)
     path = if path == nil do "" else path end
-    IO.inspect(name)
+    # it is weird, I will change it in a future
+    path = if path == "/" do "" else path end
+    IO.inspect(path)
     put_change(changeset, :path, path <> "/" <> name)
-    # case changeset do
-    #   %Ecto.Changeset{valid?: true, changes: %{path: path}} ->
-    #     put_change(changeset, :name, "////" <> path)
-    #   _ ->
-    #     changeset
-    # end
+    # put_change(changeset, :name, name)
   end
 
-  defp put_directory_id(changeset, attrs) do
-    IO.inspect(attrs)
-    changeset
+  defp put_name(changeset) do
+    # name = get_field(changeset, :name)
+    # name = if name == nil do "" else name end
+    path = get_field(changeset, :path)
+    path = if path == nil do "" else path end
+    # it is weird, I will change it in a future
+    path = if path == "/" do "" else path end
+
+    path = String.split(path, "/")
+    path = Enum.reverse(path) |> List.delete("")
+    name = List.first(path)
+    IO.inspect(name)
+
+    put_change(changeset, :name, name)
   end
 end

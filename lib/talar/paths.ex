@@ -31,24 +31,20 @@ defmodule Talar.Paths do
 
   """
   def list_directories(directory) do
-    # IO.puts("LIST DIR #{inspect(directory)}")
-    # query =
-    #   from Directory,
-    #     where: [path: ^directory],
-    #     select: [:directory_id, :path]
     directory_id = Repo.get_by(Directory, path: directory).id
-    # IO.puts("dir_id #{inspect(directory_id)}")
+
     query =
       from Directory,
         where: [directory_id: ^directory_id],
         select: [:id, :directory_id, :path]
-    # IO.puts("query #{inspect(Repo.all(query))}")
+
     query
     |> Repo.all()
     |> Enum.map(&add_name/1)
   end
 
   defp add_name(%Directory{} = directory) do
+    # IO.inspect(directory.path)
     path = String.split(directory.path, "/")
     path = Enum.reverse(path)
     %{directory | name: List.first(path)}

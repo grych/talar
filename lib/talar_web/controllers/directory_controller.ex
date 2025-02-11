@@ -52,7 +52,7 @@ defmodule TalarWeb.DirectoryController do
   end
 
   def create(conn, %{"directory" => directory_params}) do
-    # IO.inspect(directory_params)
+    # IO.inspect(parent_dir)
     case Paths.create_directory(directory_params) do
       {:ok, directory} ->
         conn
@@ -71,6 +71,10 @@ defmodule TalarWeb.DirectoryController do
 
   def edit(conn, %{"id" => id}) do
     directory = Paths.get_directory!(id)
+    directory_parent = Paths.get_directory!(directory.directory_id)
+    parent_dir_path = if directory_parent == nil do "/" else directory_parent.path end
+    directory = Map.put(directory, :parent_dir_path, parent_dir_path)
+    # IO.inspect(directory)
     changeset = Paths.change_directory(directory)
     render(conn, :edit, directory: directory, changeset: changeset)
   end
@@ -78,7 +82,6 @@ defmodule TalarWeb.DirectoryController do
   def update(conn, %{"id" => id, "directory" => directory_params}) do
     directory = Paths.get_directory!(id)
     # IO.inspect(directory)
-
     case Paths.update_directory(directory, directory_params) do
       {:ok, directory} ->
         conn

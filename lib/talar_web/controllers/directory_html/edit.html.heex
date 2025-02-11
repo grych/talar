@@ -3,16 +3,16 @@
   <:subtitle>Use this form to manage directory records in your database.</:subtitle>
 </.header>
 
-<.simple_form :let={f} for={@changeset} action={~p"/directories/#{@directory}"}>
+<.simple_form :let={f} for={@changeset} action={~p"/dir/#{@directory.parent_dir_path}"}>
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
-  <.input field={f[:path]} type="text" label="Path" value={@directory.path}/>
+  <.input field={f[:path]} type="text" label="Path" value={@directory.parent_dir_path}/>
   <.input field={f[:directory_id]} type="number" label="Directory id"/>
-  <.input field={f[:name]} type="text" label="Name (virtual)" vvalue={@directory.name}/>
+  <.input field={f[:name]} type="text" label="Name (virtual)"/>
   <:actions>
     <.button>Save Directory</.button>
   </:actions>
 </.simple_form>
 
-<.back navigate={~p"/directories"}>Back to directories</.back>
+<.back navigate={~p"/dir/#{@directory.parent_dir_path}"}>Back to directories</.back>

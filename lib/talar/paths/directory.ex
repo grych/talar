@@ -14,12 +14,11 @@ defmodule Talar.Paths.Directory do
 
   @doc false
   def changeset(directory, attrs) do
-    IO.inspect(attrs)
     directory
     |> cast(attrs, [:path, :directory_id, :name])
-    |> validate_required([:path, :directory_id])
     |> put_path()
     |> put_name()
+    |> validate_required([:path, :directory_id])
   end
 
   defp put_path(changeset) do

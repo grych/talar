@@ -12,13 +12,18 @@ defmodule Talar.Paths.Directory do
     timestamps(type: :utc_datetime)
   end
 
+  @valid_name_regex ~r/\A[a-z0-9-_]+\z/
+
   @doc false
   def changeset(directory, attrs) do
     directory
-    |> cast(attrs, [:path, :directory_id, :name])
+    |> cast(attrs, [:id, :path, :directory_id, :name])
+    |> validate_required([:path, :directory_id])
+    |> validate_length(:name, min: 1, max: 4096)
+    |> validate_format(:name, @valid_name_regex)
+    # |> unique_constraint(:name)
     |> put_path()
     |> put_name()
-    |> validate_required([:path, :directory_id])
   end
 
   defp put_path(changeset) do

@@ -5,7 +5,7 @@
   <%= @directory_id %>
 </.header>
 
-<.simple_form :let={f} for={@changeset} action={~p"/directories"}>
+<.simple_form :let={f} for={@changeset} action={~p"/directories?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"}>
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>

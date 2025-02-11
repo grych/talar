@@ -3,7 +3,7 @@ defmodule TalarWeb.DirectoryController do
 
   alias Talar.Paths
   alias Talar.Paths.Directory
-
+  import Ecto.Changeset
   import Ecto.Query, warn: false
 
   def get_parent(conn, params) do
@@ -51,8 +51,10 @@ defmodule TalarWeb.DirectoryController do
     end
   end
 
-  def create(conn, %{"directory" => directory_params}) do
-    # IO.inspect(parent_dir)
+  def create(conn, %{"directory" => directory_params, "parent_dir" => parent_dir, "directory_id" => directory_id}) do
+    IO.puts("PARENT DIR: #{inspect(parent_dir)}")
+    IO.puts("directory DIR: #{inspect(directory_id)}")
+
     case Paths.create_directory(directory_params) do
       {:ok, directory} ->
         conn
@@ -60,7 +62,17 @@ defmodule TalarWeb.DirectoryController do
         |> redirect(to: ~p"/dir/#{directory.path}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset)
+        # path = get_field(changeset, :path)
+        # IO.puts("WHA?  #{path}")
+        # dir = Talar.Repo.get_by!(Directory, path: path)
+        # IO.puts("WHA?  inspect(#{dir})")
+        # put_change(changeset, :name, "///")
+        # id = if path == nil do "" else path end
+        # path = if path == "/" do "" else path end
+        # directory_parent = Paths.get_directory!(id)
+        # parent_dir_path = if directory_parent == nil do "/" else directory_parent.path end
+        # changeset = Map.put(changeset.data, :parent_dir, directory_parent.path)
+        render(conn, :new, changeset: changeset, parent_dir: parent_dir, directory_id: directory_id)
     end
   end
 
@@ -72,8 +84,8 @@ defmodule TalarWeb.DirectoryController do
   def edit(conn, %{"id" => id}) do
     directory = Paths.get_directory!(id)
     directory_parent = Paths.get_directory!(directory.directory_id)
-    parent_dir_path = if directory_parent == nil do "/" else directory_parent.path end
-    directory = Map.put(directory, :parent_dir_path, parent_dir_path)
+    # parent_dir_path = if directory_parent == nil do "/" else directory_parent.path end
+    directory = Map.put(directory, :parent_dir_path, directory_parent.path)
     # IO.inspect(directory)
     changeset = Paths.change_directory(directory)
     render(conn, :edit, directory: directory, changeset: changeset)
@@ -82,11 +94,15 @@ defmodule TalarWeb.DirectoryController do
   def update(conn, %{"id" => id, "directory" => directory_params}) do
     directory = Paths.get_directory!(id)
     # IO.inspect(directory)
+    directory_parent = Paths.get_directory!(directory.directory_id)
+    # parent_dir_path = if directory_parent == nil do "/" else directory_parent.path end
+    directory = Map.put(directory, :parent_dir_path, directory_parent.path)
+
     case Paths.update_directory(directory, directory_params) do
       {:ok, directory} ->
         conn
         |> put_flash(:info, "Directory updated successfully.")
-        |> redirect(to: ~p"/directories/#{directory}")
+        |> redirect(to: ~p"/dir/#{directory.parent_dir_path}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, directory: directory, changeset: changeset)

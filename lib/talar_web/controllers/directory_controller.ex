@@ -77,13 +77,12 @@ defmodule TalarWeb.DirectoryController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => id, "parent_dir" => parent_dir}) do
     directory = Paths.get_directory!(id)
-    parent_dir = Paths.get_directory!(directory.directory_id)
     {:ok, _directory} = Paths.delete_directory(directory)
 
     conn
     |> put_flash(:info, "Directory deleted successfully.")
-    |> redirect(to: ~p"/dir/#{parent_dir}")
+    |> redirect(to: "/dir#{parent_dir}")
   end
 end

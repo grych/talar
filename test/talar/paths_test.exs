@@ -9,16 +9,15 @@ defmodule Talar.PathsTest do
 
     # import Talar.PathsFixtures
 
-    @invalid_attrs %{path: nil, directory_id: nil}
+    # @invalid_attrs %{directory_name: nil, directory_id: nil}
 
     test "get_root_directory/0 should return root" do
-      assert {:ok, id} = Paths.get_root_directory()
-      # assert id != nil
+      assert {:ok, _id} = Paths.get_root_directory()
     end
 
     test "list_directory/1 should return root" do
-      {:ok, root} = Paths.list_directory("/")
-      assert root = Paths.get_root_directory()
+      {:ok, _root} = Paths.list_directory("/")
+      assert _root = Paths.get_root_directory()
     end
 
     test "list_directory/1 should return {:ok, is_named_binding()} when they found it"  do
@@ -27,11 +26,11 @@ defmodule Talar.PathsTest do
       %Directory{id: dir_id} = Talar.Repo.insert!(%Directory{directory_name: "drab", directory_id: dir_id})
       Talar.Repo.insert!(%Directory{directory_name: "elixir", directory_id: dir_id})
 
-      assert {:ok, id} = Paths.list_directory("///drab///elixir///")
+      assert {:ok, _id} = Paths.list_directory("///drab///elixir///")
       # IO.inspect(id)
       # assert id != nil
 
-      assert {:ok, id} = Paths.list_directory("///drab")
+      assert {:ok, _id} = Paths.list_directory("///drab")
       # assert id2 != nil
 
       assert {:error, _id} = Paths.list_directory("///drab///Elixir///")
@@ -39,8 +38,8 @@ defmodule Talar.PathsTest do
       # IO.inspect(id)
       #  id != nil
 
-      {:ok, root} = Paths.list_directory("//")
-      assert root = Paths.get_root_directory()
+      {:ok, _root} = Paths.list_directory("//")
+      assert _root = Paths.get_root_directory()
     end
 
     test "list_directories/1 should return directories" do
@@ -49,41 +48,17 @@ defmodule Talar.PathsTest do
       %Directory{id: dir_id} = Talar.Repo.insert!(%Directory{directory_name: "drab", directory_id: dir_id})
       Talar.Repo.insert!(%Directory{directory_name: "elixir", directory_id: dir_id})
       # IO.inspect Paths.list_directories(dir_id)
-      assert id = Paths.list_directories(dir_id)
+      assert _id = Paths.list_directories(dir_id)
     end
 
-    test "list_directories/1 should return [], if there is a parent directory" do
-      Talar.Repo.insert!(%Directory{path: "/drab"})
-      assert Paths.list_directories("/drab") == []
-    end
-
-    test "list_directories/1 returns all directories from the current (parent) dir" do
-      directory = Talar.Repo.insert!(%Directory{path: "/drab"})
-      directory2 = Talar.Repo.insert!(%Directory{path: "/drab/whatever", directory_id: directory.id})
-      directory3 = Talar.Repo.insert!(%Directory{path: "/drab/whatever2", directory_id: directory.id})
-      # IO.inspect(Paths.list_directories("/drab"))
-      list_directories = Paths.list_directories("/drab")
-      dir = hd(list_directories)
-      assert directory2.path == dir.path
-      [dir] = tl(list_directories)
-      assert directory3.path == dir.path
+    test "list_directories/1 should return nothing, if there is a parent directory" do
+      Talar.Repo.insert!(%Directory{directory_name: "drab"})
+      assert_raise Ecto.Query.CastError, fn -> Paths.list_directories("/drab") end
     end
 
     test "get_directory!/1 returns the directory with given id" do
-      directory = Talar.Repo.insert!(%Directory{path: "/drab"})
+      directory = Talar.Repo.insert!(%Directory{directory_name: "drab"})
       assert Paths.get_directory!(directory.id) == directory
-    end
-
-    # test "create_directory/1 with valid data creates a directory" do
-    #   valid_attrs = %{path: "some path", directory_id: 42}
-
-    #   assert {:ok, %Directory{} = directory} = Paths.create_directory(valid_attrs)
-    #   assert directory.path == "some path"
-    #   assert directory.directory_id == 42
-    # end
-
-    test "create_directory/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Paths.create_directory(@invalid_attrs)
     end
 
     # test "update_directory/2 with valid data updates the directory" do

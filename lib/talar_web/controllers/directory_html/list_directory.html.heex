@@ -18,7 +18,7 @@
     <.link navigate={~p"/directories/#{directory}/edit?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"}>Edit</.link>
   </:action>
   <:action :let={directory}>
-    <.link href={~p"/directories/#{directory}"} method="delete" data-confirm="Are you sure?">
+    <.link href={~p"/directories/#{directory}?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
   </:action>

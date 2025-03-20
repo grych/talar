@@ -117,12 +117,12 @@ defmodule Talar.Paths do
     # Repo.get_by(Directory, directory_name: "", directory_id: nil)
   end
 
-  defp add_name(%Directory{} = directory) do
-    # IO.inspect(directory.path)
-    path = String.split(directory.path, "/")
-    path = Enum.reverse(path)
-    %{directory | name: List.first(path)}
-  end
+  # defp add_name(%Directory{} = directory) do
+  #   # IO.inspect(directory.path)
+  #   path = String.split(directory.path, "/")
+  #   path = Enum.reverse(path)
+  #   %{directory | name: List.first(path)}
+  # end
 
   @doc """
   Gets a single directory.

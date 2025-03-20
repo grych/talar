@@ -21,26 +21,100 @@ defmodule Talar.Paths do
     Repo.all(Directory)
   end
 
-   @doc """
-  Returns the list of directories of the parent dir
+  @doc """
+  Returns the list of a directory ID.
 
   ## Examples
 
-      iex> list_directories("/drab")
+      iex> list_directories(directory_id)
       [%Directory{}, ...]
 
   """
-  def list_directories(directory) do
-    directory_id = Repo.get_by(Directory, path: directory).id
+  def list_directories(directory_id) do
+    query = from d in Directory,
+      where: (d.directory_id==^directory_id),
+      select: [:id, :directory_name, :directory_id]
+    Repo.all(query)
+  end
 
+   @doc """
+  Returns the list of directories on the dir
+
+  ## Examples
+
+      iex> list_directory("/drab")
+      {:ok, 7}
+      iex> list_directory("/non-exisient")
+      {:error, "Directory not found"}
+
+  """
+  def list_directory(directory_name) do
+    directory_name = String.split(directory_name, "/", trim: true)
+    #directory_name = [""] ++ directory_name # adding the ROOT of directory (?)
+    # |> Enum.reverse()
+    # |> Enum.map(fn x -> x == ""; x end)
+    # |> Enum.drop("")
+    # |> Enum.filter(fn x -> String.trim(x) <> "" end)
+    # IO.inspect(directory_name)
+    # directory_id = Repo.get_by(Directory, path: directory).id
+
+    # query =
+    #   from Directory,
+    #     where: [directory_id: ^directory_id],
+    #     select: [:id, :directory_id, :path]
+
+    # query
+    # |> Repo.all()
+    # |> Enum.map(&add_name/1)
+    list_directory(get_root_directory(), directory_name)
+  end
+
+  defp list_directory(acc, directory_name) do
+    case directory_name do
+      [] -> acc
+      [head | tail] ->
+        {:ok, parent_acc} = acc
+        # searching for someone where name=head and directory_id=parent_acc
+        query =
+          from d in Directory,
+            where: (d.directory_name == ^head and d.directory_id==^parent_acc),
+            select: [:id]
+        all = Repo.all(query)
+        if length(all) == 1 do
+          acc = {:ok, hd(all).id}
+          list_directory(acc, tail)
+        else
+          {:error, "Can't find the directory"}
+        end
+        # IO.inspect(all)
+
+      # [""] -> get_root_directory()
+    end
+  end
+
+  @doc """
+  Gets a root directory.
+
+  ## Examples
+
+      iex> get_root_directory()
+      {:ok, 1}
+      iex> get_root_directory() # is not existenet
+      {:error, "No ROOT directory"}
+  """
+  def get_root_directory() do
     query =
-      from Directory,
-        where: [directory_id: ^directory_id],
-        select: [:id, :directory_id, :path]
+      from d in Directory,
+        where: (d.directory_name == "" and is_nil(d.directory_id)),
+        select: [:id]
 
-    query
-    |> Repo.all()
-    |> Enum.map(&add_name/1)
+    all = query |> Repo.all()
+    if length(all) != 1 do
+      {:error, "No ROOT directory"}
+    else
+      {:ok, hd(all).id}
+    end
+    # Repo.get_by(Directory, directory_name: "", directory_id: nil)
   end
 
   defp add_name(%Directory{} = directory) do
@@ -97,6 +171,7 @@ defmodule Talar.Paths do
 
   """
   def update_directory(%Directory{} = directory, attrs) do
+    IO.inspect(attrs)
     directory
     |> Directory.changeset(attrs)
     |> Repo.update()

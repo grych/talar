@@ -2,9 +2,8 @@
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
-  <.input field={f[:path]} type="text" label="Path" />
+  <.input field={f[:directory_name]} type="text" label="Name" />
   <.input field={f[:directory_id]} type="number" label="Directory"/>
-  <.input field={f[:name]} type="text" label="Name (virtual)" />
   <:actions>
     <.button>Save Directory</.button>
   </:actions>

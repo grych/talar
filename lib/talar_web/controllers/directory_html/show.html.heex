@@ -1,5 +1,5 @@
 <.header>
-  Directory <%= @directory.id %>
+  Directory <%= @directory.directory_name %>
   <:subtitle>This is a directory record from your database.</:subtitle>
   <:actions>
     <.link href={~p"/directories/#{@directory}/edit"}>
@@ -9,8 +9,7 @@
 </.header>
 
 <.list>
-  <:item title="Path"><%= @directory.path %></:item>
-  <:item title="Directory"><%= @directory.directory_id %></:item>
+  <:item title="Directory name"><%= @directory.directory_name %></:item>
 </.list>
 
 <.back navigate={~p"/directories"}>Back to directories</.back>

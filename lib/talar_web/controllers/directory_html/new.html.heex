@@ -2,19 +2,17 @@
   New Directory
   <:subtitle>Use this form to manage directory records in your database.</:subtitle>
   <%= @parent_dir %>
-  <%= @directory_id %>
 </.header>
 
 <.simple_form :let={f} for={@changeset} action={~p"/directories?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"}>
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
-  <.input field={f[:path]} type="text" label="Path" value={@parent_dir}/>
-  <.input field={f[:directory_id]} type="number" label="Directory" value={@directory_id}/>
-  <.input field={f[:name]} type="text" label="Name (virtual)" />
+  <.input field={f[:directory_id]} type="text" label="Directory ID" value={@directory_id} />
+  <.input field={f[:directory_name]} type="text" label="Directory name" />
   <:actions>
     <.button>Save Directory</.button>
   </:actions>
 </.simple_form>
 
-<.back navigate={~p"/dir/#{@parent_dir}"}>Back to directories</.back>
+<.back navigate={"/dir#{@parent_dir}"}>Back to directories</.back>

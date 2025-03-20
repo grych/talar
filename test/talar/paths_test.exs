@@ -11,6 +11,47 @@ defmodule Talar.PathsTest do
 
     @invalid_attrs %{path: nil, directory_id: nil}
 
+    test "get_root_directory/0 should return root" do
+      assert {:ok, id} = Paths.get_root_directory()
+      # assert id != nil
+    end
+
+    test "list_directory/1 should return root" do
+      {:ok, root} = Paths.list_directory("/")
+      assert root = Paths.get_root_directory()
+    end
+
+    test "list_directory/1 should return {:ok, is_named_binding()} when they found it"  do
+      Talar.Repo.delete_all(Directory)
+      %Directory{id: dir_id} = Talar.Repo.insert!(%Directory{directory_name: ""})
+      %Directory{id: dir_id} = Talar.Repo.insert!(%Directory{directory_name: "drab", directory_id: dir_id})
+      Talar.Repo.insert!(%Directory{directory_name: "elixir", directory_id: dir_id})
+
+      assert {:ok, id} = Paths.list_directory("///drab///elixir///")
+      # IO.inspect(id)
+      # assert id != nil
+
+      assert {:ok, id} = Paths.list_directory("///drab")
+      # assert id2 != nil
+
+      assert {:error, _id} = Paths.list_directory("///drab///Elixir///")
+      assert {:error, _id} = Paths.list_directory("///Frab///elixir///")
+      # IO.inspect(id)
+      #  id != nil
+
+      {:ok, root} = Paths.list_directory("//")
+      assert root = Paths.get_root_directory()
+    end
+
+    test "list_directories/1 should return directories" do
+      Talar.Repo.delete_all(Directory)
+      %Directory{id: dir_id} = Talar.Repo.insert!(%Directory{directory_name: ""})
+      %Directory{id: dir_id} = Talar.Repo.insert!(%Directory{directory_name: "drab", directory_id: dir_id})
+      Talar.Repo.insert!(%Directory{directory_name: "elixir", directory_id: dir_id})
+      # IO.inspect Paths.list_directories(dir_id)
+      assert id = Paths.list_directories(dir_id)
+    end
+
     test "list_directories/1 should return [], if there is a parent directory" do
       Talar.Repo.insert!(%Directory{path: "/drab"})
       assert Paths.list_directories("/drab") == []

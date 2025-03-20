@@ -22,9 +22,9 @@ defmodule TalarWeb.Router do
     get "/signup", UserController, :new, as: :signup
     # get "/directories/new", DirectoryController,
     resources "/directories", DirectoryController,
-      only: [:new, :index, :show, :edit, :delete, :update, :create]
-    get "/dir/*dir", DirectoryController, :get_parent
-    # put "/dir/*dir", DirectoryController, :get_parent
+      only: [:new, :edit, :delete, :update, :create]
+    get "/dir/*dir", DirectoryController, :list_directory
+    # post "/dir/*dir", DirectoryController, :list_directory
   end
 
   # Other scopes may use custom stacks.

@@ -8,6 +8,7 @@ defmodule TalarWeb.Router do
     plug :put_root_layout, html: {TalarWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Talar.Auth, repo: Talar.Repo
   end
 
   pipeline :api do
@@ -18,6 +19,7 @@ defmodule TalarWeb.Router do
     pipe_through :browser
 
     get "/", UserController, :index
+    resources "/sessions", SessionsController, only: [:new, :create, :delete]
     resources "/users", UserController
     get "/signup", UserController, :new, as: :signup
     # get "/directories/new", DirectoryController,

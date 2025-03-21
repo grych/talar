@@ -1,8 +1,30 @@
 defmodule TalarWeb.UserController do
   use TalarWeb, :controller
+  plug :authenticate when action in [:index, :show]
 
   alias Talar.Accounts
   alias Talar.Accounts.User
+
+  defp authenticate(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page")
+      |> redirect(to: ~p"/signup")
+      |> halt()
+    end
+  end
+
+  # def index(conn, _params) do
+  #   case authenticate(conn) do
+  #     %Plug.Conn{halted: true} = conn ->
+  #       conn
+  #     conn ->
+  #       users = Accounts.list_users()
+  #       render(conn, :index, users: users)
+  #   end
+  # end
 
   def index(conn, _params) do
     users = Accounts.list_users()
@@ -18,6 +40,7 @@ defmodule TalarWeb.UserController do
     case Accounts.create_user(user_params) do
       {:ok, user} ->
         conn
+        |> Talar.Auth.login(user)
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: ~p"/users/#{user}")
 

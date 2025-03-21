@@ -20,8 +20,6 @@ defmodule TalarWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :talar
-  # use Gettext.Backend, otp_app: :talar
-  # use Gettext.Backend, otp_app: :talar
-  # use Gettext, backend: Talar.Gettext
+  # use Gettext, otp_app: :talar
+  use Gettext.Backend, otp_app: :talar
 end

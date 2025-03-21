@@ -53,14 +53,9 @@ defmodule TalarWeb.DirectoryControllerTest do
   end
 
   describe "update directory" do
-    # setup [:create_directory]
+    setup [:create_directory]
 
-    test "redirects when data is valid", %{conn: conn} do
-      Talar.Repo.delete_all(Directory)
-      %Directory{id: dir_id1} = Talar.Repo.insert!(%Directory{directory_name: ""})
-      %Directory{id: dir_id2} = Talar.Repo.insert!(%Directory{directory_name: "elixir"})
-      # IO.puts("aaaaaaaaaaaaaaaaa: #{dir_id1} #{dir_id2}")
-
+    test "redirects when data is valid", %{conn: conn, dir_id1: dir_id1, dir_id2: dir_id2} do
       conn = put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}", directory: @update_attrs)
       # assert redirected_to(conn) == ~p"/dir/"
 
@@ -68,24 +63,16 @@ defmodule TalarWeb.DirectoryControllerTest do
       assert html_response(conn, 200) =~ "some_updated_path"
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      Talar.Repo.delete_all(Directory)
-      %Directory{id: dir_id1} = Talar.Repo.insert!(%Directory{directory_name: ""})
-      %Directory{id: dir_id2} = Talar.Repo.insert!(%Directory{directory_name: "elixir"})
-
+    test "renders errors when data is invalid", %{conn: conn, dir_id1: dir_id1, dir_id2: dir_id2} do
       conn = put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}", directory: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Directory"
     end
   end
 
   describe "delete directory" do
-    # setup [:create_directory]
+    setup [:create_directory]
 
-    test "deletes chosen directory", %{conn: conn} do
-      Talar.Repo.delete_all(Directory)
-      %Directory{id: dir_id1} = Talar.Repo.insert!(%Directory{directory_name: ""})
-      %Directory{id: dir_id2} = Talar.Repo.insert!(%Directory{directory_name: "elixir"})
-
+    test "deletes chosen directory", %{conn: conn, dir_id1: dir_id1, dir_id2: dir_id2} do
       conn = delete(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}")
       assert redirected_to(conn) == ~p"/dir/"
 
@@ -98,8 +85,10 @@ defmodule TalarWeb.DirectoryControllerTest do
     end
   end
 
-  # defp create_directory(_) do
-  #   directory = directory_fixture()
-  #   %{directory: directory}
-  # end
+  defp create_directory(_) do
+    Talar.Repo.delete_all(Directory)
+    %Directory{id: dir_id1} = Talar.Repo.insert!(%Directory{directory_name: ""})
+    %Directory{id: dir_id2} = Talar.Repo.insert!(%Directory{directory_name: "elixir"})
+    %{dir_id1: dir_id1, dir_id2: dir_id2}
+  end
 end

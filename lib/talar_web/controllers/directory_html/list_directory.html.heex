@@ -10,15 +10,14 @@
 
 <.table id="directories" rows={@directories} row_click={&JS.navigate("/dir#{@parent_dir}/#{&1.directory_name}")}>
   <:col :let={directory} label="Name"><%= directory.directory_name %></:col>
-  <:col :let={directory} label="ID directory"><%= directory.directory_id %></:col>
   <:action :let={directory}>
     <div class="sr-only">
-      <.link navigate={~p"/dir/#{directory.directory_name}"}>Show</.link>
+      <.link navigate={"/dir#{@parent_dir}/#{directory.directory_name}"}>Show</.link>
     </div>
     <.link navigate={~p"/directories/#{directory}/edit?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"}>Edit</.link>
   </:action>
   <:action :let={directory}>
-    <.link href={~p"/directories/#{directory}?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"} method="delete" data-confirm="Are you sure?">
+    <.link href={~p"/directories/#{directory}?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"} method="delete" data-confirm="Are you sure? This will delete all the stuff under the directory">
       Delete
     </.link>
   </:action>

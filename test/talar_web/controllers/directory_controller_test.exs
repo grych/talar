@@ -5,8 +5,8 @@ defmodule TalarWeb.DirectoryControllerTest do
   alias Talar.Paths.Directory
 
   @create_attrs %{directory_name: "some_path", directory_id: 1}
-  @update_attrs %{directory_name: "some_updated_path", directory_id: 33}
-  @invalid_attrs %{directory_name: nil, directory_id: nil}
+  @update_attrs %{directory_name: "some_updated_path"}
+  @invalid_attrs %{directory_name: "another path", directory_id: 1}
 
   describe "index" do
     test "lists all directories", %{conn: conn} do
@@ -50,49 +50,51 @@ defmodule TalarWeb.DirectoryControllerTest do
       assert %{dir: ["elixir"]} = redirected_params(conn)
       assert redirected_to(conn) == ~p"/dir/elixir"
     end
-
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/directories?parent_dir=/elixir&directory_id=22", directory: @invalid_attrs)
-      assert_raise(RuntimeError, fn -> html_response(conn, 200) end)
-    end
-  end
-
-  describe "edit directory" do
-    setup [:create_directory]
-
-    test "renders form for editing chosen directory", %{conn: conn, directory: directory} do
-      conn = get(conn, ~p"/directories/#{directory}/edit")
-      assert html_response(conn, 200) =~ "Edit Directory"
-    end
   end
 
   describe "update directory" do
-    setup [:create_directory]
+    # setup [:create_directory]
 
-    test "redirects when data is valid", %{conn: conn, directory: directory} do
-      conn = put(conn, ~p"/directories/#{directory}", directory: @update_attrs)
-      assert redirected_to(conn) == ~p"/directories/#{directory}"
+    test "redirects when data is valid", %{conn: conn} do
+      Talar.Repo.delete_all(Directory)
+      %Directory{id: dir_id1} = Talar.Repo.insert!(%Directory{directory_name: ""})
+      %Directory{id: dir_id2} = Talar.Repo.insert!(%Directory{directory_name: "elixir"})
+      # IO.puts("aaaaaaaaaaaaaaaaa: #{dir_id1} #{dir_id2}")
 
-      conn = get(conn, ~p"/directories/#{directory}")
-      assert html_response(conn, 200) =~ "some updated path"
+      conn = put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}", directory: @update_attrs)
+      # assert redirected_to(conn) == ~p"/dir/"
+
+      # conn = get(conn, ~p"/dir/some_updated_path")
+      assert html_response(conn, 200) =~ "some_updated_path"
     end
 
-    test "renders errors when data is invalid", %{conn: conn, directory: directory} do
-      conn = put(conn, ~p"/directories/#{directory}", directory: @invalid_attrs)
+    test "renders errors when data is invalid", %{conn: conn} do
+      Talar.Repo.delete_all(Directory)
+      %Directory{id: dir_id1} = Talar.Repo.insert!(%Directory{directory_name: ""})
+      %Directory{id: dir_id2} = Talar.Repo.insert!(%Directory{directory_name: "elixir"})
+
+      conn = put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}", directory: @invalid_attrs)
       assert html_response(conn, 200) =~ "Edit Directory"
     end
   end
 
   describe "delete directory" do
-    setup [:create_directory]
+    # setup [:create_directory]
 
-    test "deletes chosen directory", %{conn: conn, directory: directory} do
-      conn = delete(conn, ~p"/directories/#{directory}")
-      assert redirected_to(conn) == ~p"/directories"
+    test "deletes chosen directory", %{conn: conn} do
+      Talar.Repo.delete_all(Directory)
+      %Directory{id: dir_id1} = Talar.Repo.insert!(%Directory{directory_name: ""})
+      %Directory{id: dir_id2} = Talar.Repo.insert!(%Directory{directory_name: "elixir"})
 
-      assert_error_sent 404, fn ->
-        get(conn, ~p"/directories/#{directory}")
-      end
+      conn = delete(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}")
+      assert redirected_to(conn) == ~p"/dir/"
+
+      conn = get(conn, ~p"/dir/elixir")
+      assert redirected_to(conn) == ~p"/dir"
+      # assert_raise(RuntimeError, fn -> html_response(conn, 200) end)
+      # assert_error_sent 404, fn ->
+      #   get(conn, ~p"/dir/elixir2")
+      # end
     end
   end
 

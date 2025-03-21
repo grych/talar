@@ -1,7 +1,7 @@
 defmodule TalarWeb.DirectoryControllerTest do
   use TalarWeb.ConnCase
 
-  import Talar.PathsFixtures
+  # import Talar.PathsFixtures
   alias Talar.Paths.Directory
 
   @create_attrs %{directory_name: "some_path", directory_id: 1}
@@ -98,8 +98,8 @@ defmodule TalarWeb.DirectoryControllerTest do
     end
   end
 
-  defp create_directory(_) do
-    directory = directory_fixture()
-    %{directory: directory}
-  end
+  # defp create_directory(_) do
+  #   directory = directory_fixture()
+  #   %{directory: directory}
+  # end
 end

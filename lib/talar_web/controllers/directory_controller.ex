@@ -36,9 +36,8 @@ defmodule TalarWeb.DirectoryController do
 
   def new(conn, params) do
     %{"parent_dir" => dirs, "directory_id" => directory_id} = params
-      changeset = Paths.change_directory(%Directory{})
-      render(conn, :new, changeset: changeset, parent_dir: dirs, directory_id: directory_id)
-    # end
+    changeset = Paths.change_directory(%Directory{})
+    render(conn, :new, changeset: changeset, parent_dir: dirs, directory_id: directory_id)
   end
 
   def create(conn, %{"directory" => directory_params, "parent_dir" => parent_dir, "directory_id" => directory_id}) do

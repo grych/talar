@@ -21,6 +21,10 @@
       >
         Get Started <span aria-hidden="true">&rarr;</span>
       </a>
+      <%= Talar.Auth.get_cookies1(@conn) %>
+      <a href={~p"/sessions/new"} class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
+        Sign in
+      </a>
     </div>
   </div>
 </header>

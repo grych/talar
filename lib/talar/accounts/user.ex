@@ -11,6 +11,7 @@ defmodule Talar.Accounts.User do
 
     field :password, :string, virtual: true, redact: true
     field :password_confirmation, :string, virtual: true, redact: true
+    # field :save, :boolean, virtual: false, redact: true
   end
 
   @valid_email_regex ~r/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

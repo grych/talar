@@ -1,6 +1,6 @@
 defmodule TalarWeb.UserController do
   use TalarWeb, :controller
-  plug :authenticate when action in [:index, :show]
+  plug :authenticate when action in [:new, :index, :show, :create, :delete, :edit, :update]
 
   alias Talar.Accounts
   alias Talar.Accounts.User
@@ -11,7 +11,7 @@ defmodule TalarWeb.UserController do
     else
       conn
       |> put_flash(:error, "You must be logged in to access that page")
-      |> redirect(to: ~p"/signup")
+      |> redirect(to: ~p"/sessions/new")
       |> halt()
     end
   end

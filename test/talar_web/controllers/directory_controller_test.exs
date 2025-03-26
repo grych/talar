@@ -16,6 +16,8 @@ defmodule TalarWeb.DirectoryControllerTest do
   end
 
   describe "dir/" do
+    setup [:add_user]
+
     test "list dir on /", %{conn: conn} do
       conn = get(conn, ~p"/dir")
       assert html_response(conn, 200) =~ "Listing Directories"
@@ -53,7 +55,7 @@ defmodule TalarWeb.DirectoryControllerTest do
   end
 
   describe "update directory" do
-    setup [:create_directory]
+    setup [:add_user, :create_directory]
 
     test "redirects when data is valid", %{conn: conn, dir_id1: dir_id1, dir_id2: dir_id2} do
       conn = put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}", directory: @update_attrs)
@@ -90,5 +92,17 @@ defmodule TalarWeb.DirectoryControllerTest do
     %Directory{id: dir_id1} = Talar.Repo.insert!(%Directory{directory_name: ""})
     %Directory{id: dir_id2} = Talar.Repo.insert!(%Directory{directory_name: "elixir"})
     %{dir_id1: dir_id1, dir_id2: dir_id2}
+  end
+
+  defp add_user(%{conn: conn}) do
+    user = Talar.TestHelper.insert_user()
+    IO.inspect(user)
+    # conn = assign(conn, :current_user, user)
+    conn = assign(conn, :current_user, user)
+    # |> get_session(:user_id, user.id)
+    # |> configure_session(renew: true)
+    IO.inspect(conn)
+    IO.inspect(conn.assigns.current_user)
+    {:ok, conn: conn, user: user}
   end
 end

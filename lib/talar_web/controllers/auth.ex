@@ -39,18 +39,19 @@ defmodule Talar.Auth do
     end
   end
 
-  def get_cookie(conn) do
-    conn = fetch_cookies(conn, signed: ~w(save_me_token))
-    if cookie = conn.cookies["save_me_token"] do
-      user = Talar.Accounts.get_user(cookie)
-      user.name
-    else
-      ""
-    end
-  end
+  # def get_cookie(conn) do
+  #   conn = fetch_cookies(conn, signed: ~w(save_me_token))
+  #   if cookie = conn.cookies["save_me_token"] do
+  #     user = Talar.Accounts.get_user(cookie)
+  #     user.name
+  #   else
+  #     ""
+  #   end
+  # end
 
   def login_by_email_and_password(conn, email, given_pass) do
     # repo = Keyword.fetch!(opts, :repo)
+    email = String.downcase(email)
     user = Talar.Repo.get_by(Talar.Accounts.User, email: email)
     cond do
       user && Argon2.verify_pass(given_pass, user.password_hash) ->
@@ -60,7 +61,7 @@ defmodule Talar.Auth do
             |> put_resp_cookie("save_me_token", user.id, sign: true, max_age: 60*60*24*30)
             |> fetch_cookies(encrypted: ~w(save_me_token))
           else
-            conn = delete_resp_cookie(conn, "save_me_token")
+            delete_resp_cookie(conn, "save_me_token")
           end
         {:ok, login(conn, user)}
       user ->

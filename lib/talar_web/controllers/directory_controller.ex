@@ -3,8 +3,21 @@ defmodule TalarWeb.DirectoryController do
 
   alias Talar.Paths
   alias Talar.Paths.Directory
-  # import Ecto.Changeset
+
   import Ecto.Query, warn: false
+
+  plug :authenticate when action in [:list_directory, :new, :index, :show, :create, :delete, :edit, :update]
+
+  defp authenticate(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page")
+      |> redirect(to: ~p"/sessions/new")
+      |> halt()
+    end
+  end
 
   def list_directory(conn, params) do
     # so params have a "dir" inside:

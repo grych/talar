@@ -16,7 +16,7 @@ defmodule TalarWeb.SessionsController do
         # |> put_flash(:info, "Welcome back!")
         |> redirect(to: ~p"/dir")
       {:error, _, conn} ->
-        changeset = Accounts.change_user(%User{email: email})
+        changeset = Accounts.change_user(%User{email: String.downcase(email)})
         conn
         |> put_flash(:error, "Invalid username or password")
         |> render(:new, changeset: changeset)

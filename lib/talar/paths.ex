@@ -171,7 +171,7 @@ defmodule Talar.Paths do
 
   """
   def update_directory(%Directory{} = directory, attrs) do
-    IO.inspect(attrs)
+    # IO.inspect(attrs)
     directory
     |> Directory.changeset(attrs)
     |> Repo.update()

@@ -9,7 +9,7 @@ defmodule TalarWeb.SessionsController do
     render(conn, :new, changeset: changeset)
   end
 
-  def create(conn, %{"user" => %{"email" => email, "password" => pass, "save" => save}}) do
+  def create(conn, %{"user" => %{"email" => email, "password" => pass, "save" => _save}}) do
     case Talar.Auth.login_by_email_and_password(conn, email, pass) do
       {:ok, conn} ->
         conn

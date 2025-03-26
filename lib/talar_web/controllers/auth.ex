@@ -30,7 +30,16 @@ defmodule Talar.Auth do
   #   put_resp_cookie(conn, "save_me_token", token, max_age: @cookie_max_age)
   # end
 
-  def get_cookies(conn) do
+  def get_session(conn) do
+    if session = get_session(conn, :user_id) do
+      user = Talar.Accounts.get_user(session)
+      user.name
+    else
+      ""
+    end
+  end
+
+  def get_cookie(conn) do
     conn = fetch_cookies(conn, signed: ~w(save_me_token))
     if cookie = conn.cookies["save_me_token"] do
       user = Talar.Accounts.get_user(cookie)

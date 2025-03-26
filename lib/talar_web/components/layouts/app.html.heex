@@ -9,13 +9,17 @@
       </p>
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <%= Talar.Auth.get_cookies(@conn) %>
-      <a href={~p"/sessions/new"} class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
-        Sign in
-      </a>
-      <.link href={~p"/sessions/delete"} class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80" method="delete" data-confirm="Are you sure?">
-        Sign out
-      </.link>
+      <% session = Talar.Auth.get_session(@conn) %>
+      <%= if session == "" do %>
+        <a href={~p"/sessions/new"} class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
+          Sign in
+        </a>
+      <% else %>
+        <%= session %>
+        <.link href={~p"/sessions/delete"} class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80" method="delete" data-confirm="Are you sure?">
+          Sign out
+        </.link>
+      <% end %>
     </div>
   </div>
 </header>

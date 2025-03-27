@@ -1,10 +1,14 @@
 <.header>
   New Directory
   <:subtitle>Use this form to manage directory records in your database.</:subtitle>
-  <%= @parent_dir %>
+  {@parent_dir}
 </.header>
 
-<.simple_form :let={f} for={@changeset} action={~p"/directories?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"}>
+<.simple_form
+  :let={f}
+  for={@changeset}
+  action={~p"/directories?parent_dir=#{@parent_dir}&directory_id=#{@directory_id}"}
+>
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>

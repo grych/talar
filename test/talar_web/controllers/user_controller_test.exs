@@ -83,5 +83,4 @@ defmodule TalarWeb.UserControllerTest do
     conn = assign(conn, :current_user, user)
     {:ok, conn: conn, user: user}
   end
-
 end

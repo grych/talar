@@ -7,11 +7,14 @@ defmodule Talar.Auth do
 
   def call(conn, repo) do
     user_id = get_session(conn, :user_id)
+
     cond do
       conn.assigns[:current_user] ->
         conn
+
       user = user_id && repo.get(Talar.Accounts.User, user_id) ->
         assign(conn, :current_user, user)
+
       true ->
         assign(conn, :current_user, nil)
     end
@@ -59,19 +62,23 @@ defmodule Talar.Auth do
     # repo = Keyword.fetch!(opts, :repo)
     email = String.downcase(email)
     user = Talar.Repo.get_by(Talar.Accounts.User, email: email)
+
     cond do
       user && Argon2.verify_pass(given_pass, user.password_hash) ->
         conn =
           if String.to_atom(conn.params["user"]["save"]) do
             conn
-            |> put_resp_cookie("save_me_token", user.id, sign: true, max_age: 60*60*24*30)
+            |> put_resp_cookie("save_me_token", user.id, sign: true, max_age: 60 * 60 * 24 * 30)
             |> fetch_cookies(encrypted: ~w(save_me_token))
           else
             delete_resp_cookie(conn, "save_me_token")
           end
+
         {:ok, login(conn, user)}
+
       user ->
         {:error, :unauthorized, conn}
+
       true ->
         Argon2.no_user_verify()
         {:error, :not_found, conn}

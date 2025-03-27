@@ -1,14 +1,18 @@
 <.header>
-  Edit Directory <%= @directory.directory_name %>
+  Edit Directory {@directory.directory_name}
   <:subtitle>Use this form to manage directory records in your database.</:subtitle>
   <% _parent_dir = @conn.params["parent_dir"] %>
 </.header>
 
-<.simple_form :let={f} for={@changeset} action={"/directories/#{@directory.id}?parent_dir=#{@conn.params["parent_dir"]}"}>
+<.simple_form
+  :let={f}
+  for={@changeset}
+  action={"/directories/#{@directory.id}?parent_dir=#{@conn.params["parent_dir"]}"}
+>
   <.error :if={@changeset.action}>
     Oops, something went wrong! Please check the errors below.
   </.error>
-  <.input field={f[:directory_name]} type="text" label="Name"/>
+  <.input field={f[:directory_name]} type="text" label="Name" />
   <:actions>
     <.button>Save Directory</.button>
   </:actions>

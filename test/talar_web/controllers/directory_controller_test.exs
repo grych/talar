@@ -27,7 +27,9 @@ defmodule TalarWeb.DirectoryControllerTest do
     test "list dir on /elixir", %{conn: conn} do
       Talar.Repo.delete_all(Directory)
       %Directory{id: dir_id} = Talar.Repo.insert!(%Directory{directory_name: ""})
-      %Directory{} = Talar.Repo.insert!(%Directory{directory_name: "elixir", directory_id: dir_id})
+
+      %Directory{} =
+        Talar.Repo.insert!(%Directory{directory_name: "elixir", directory_id: dir_id})
 
       conn = get(conn, ~p"/dir/elixir")
       assert html_response(conn, 200) =~ "Listing Directories"
@@ -52,7 +54,8 @@ defmodule TalarWeb.DirectoryControllerTest do
     setup [:add_user]
 
     test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/directories?parent_dir=/elixir&directory_id=1", directory: @create_attrs)
+      conn =
+        post(conn, ~p"/directories?parent_dir=/elixir&directory_id=1", directory: @create_attrs)
 
       assert %{dir: ["elixir"]} = redirected_params(conn)
       assert redirected_to(conn) == ~p"/dir/elixir"
@@ -63,12 +66,20 @@ defmodule TalarWeb.DirectoryControllerTest do
     setup [:add_user, :create_directory]
 
     test "redirects when data is valid", %{conn: conn, dir_id1: dir_id1, dir_id2: dir_id2} do
-      conn = put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}", directory: @update_attrs)
+      conn =
+        put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}",
+          directory: @update_attrs
+        )
+
       assert html_response(conn, 200) =~ "some_updated_path"
     end
 
     test "renders errors when data is invalid", %{conn: conn, dir_id1: dir_id1, dir_id2: dir_id2} do
-      conn = put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}", directory: @invalid_attrs)
+      conn =
+        put(conn, ~p"/directories/#{dir_id2}?parent_dir=/&directory_id=#{dir_id1}",
+          directory: @invalid_attrs
+        )
+
       assert html_response(conn, 200) =~ "Edit Directory"
     end
   end

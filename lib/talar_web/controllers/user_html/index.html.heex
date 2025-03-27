@@ -8,8 +8,8 @@
 </.header>
 
 <.table id="users" rows={@users} row_click={&JS.navigate(~p"/users/#{&1}")}>
-  <:col :let={user} label="Name"><%= user.name %></:col>
-  <:col :let={user} label="Email"><%= user.email %></:col>
+  <:col :let={user} label="Name">{user.name}</:col>
+  <:col :let={user} label="Email">{user.email}</:col>
   <:action :let={user}>
     <div class="sr-only">
       <.link navigate={~p"/users/#{user}"}>Show</.link>

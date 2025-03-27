@@ -31,13 +31,15 @@ defmodule Talar.Paths do
 
   """
   def list_directories(directory_id) do
-    query = from d in Directory,
-      where: (d.directory_id==^directory_id),
-      select: [:id, :directory_name, :directory_id]
+    query =
+      from d in Directory,
+        where: d.directory_id == ^directory_id,
+        select: [:id, :directory_name, :directory_id]
+
     Repo.all(query)
   end
 
-   @doc """
+  @doc """
   Returns the list of directories on the dir
 
   ## Examples
@@ -50,7 +52,7 @@ defmodule Talar.Paths do
   """
   def list_directory(directory_name) do
     directory_name = String.split(directory_name, "/", trim: true)
-    #directory_name = [""] ++ directory_name # adding the ROOT of directory (?)
+    # directory_name = [""] ++ directory_name # adding the ROOT of directory (?)
     # |> Enum.reverse()
     # |> Enum.map(fn x -> x == ""; x end)
     # |> Enum.drop("")
@@ -71,24 +73,29 @@ defmodule Talar.Paths do
 
   defp list_directory(acc, directory_name) do
     case directory_name do
-      [] -> acc
+      [] ->
+        acc
+
       [head | tail] ->
         {:ok, parent_acc} = acc
         # searching for someone where name=head and directory_id=parent_acc
         query =
           from d in Directory,
-            where: (d.directory_name == ^head and d.directory_id==^parent_acc),
+            where: d.directory_name == ^head and d.directory_id == ^parent_acc,
             select: [:id]
+
         all = Repo.all(query)
+
         if length(all) == 1 do
           acc = {:ok, hd(all).id}
           list_directory(acc, tail)
         else
           {:error, "Can't find the directory"}
         end
+
         # IO.inspect(all)
 
-      # [""] -> get_root_directory()
+        # [""] -> get_root_directory()
     end
   end
 
@@ -105,15 +112,17 @@ defmodule Talar.Paths do
   def get_root_directory() do
     query =
       from d in Directory,
-        where: (d.directory_name == "" and is_nil(d.directory_id)),
+        where: d.directory_name == "" and is_nil(d.directory_id),
         select: [:id]
 
     all = query |> Repo.all()
+
     if length(all) != 1 do
       {:error, "No ROOT directory"}
     else
       {:ok, hd(all).id}
     end
+
     # Repo.get_by(Directory, directory_name: "", directory_id: nil)
   end
 

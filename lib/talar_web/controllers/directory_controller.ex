@@ -6,7 +6,8 @@ defmodule TalarWeb.DirectoryController do
 
   import Ecto.Query, warn: false
 
-  plug :authenticate when action in [:list_directory, :new, :index, :show, :create, :delete, :edit, :update]
+  plug :authenticate
+       when action in [:list_directory, :new, :index, :show, :create, :delete, :edit, :update]
 
   defp authenticate(conn, _opts) do
     if conn.assigns.current_user do
@@ -24,11 +25,12 @@ defmodule TalarWeb.DirectoryController do
     #     %{"dir" => ["vaiue1", "value2"]}
     %{"dir" => dir_list} = params
     # so we take the dir list, and then move it to the dirs string
-    dirs = if dir_list == [] do
-      "/"
-    else
-      "/" <> Enum.join(dir_list, "/")
-    end
+    dirs =
+      if dir_list == [] do
+        "/"
+      else
+        "/" <> Enum.join(dir_list, "/")
+      end
 
     # IO.inspect(dirs)
 
@@ -36,7 +38,9 @@ defmodule TalarWeb.DirectoryController do
       {:ok, id} ->
         directory = Paths.list_directories(id)
         render(conn, :list_directory, directories: directory, parent_dir: dirs, directory_id: id)
-      {:error, _what} -> conn
+
+      {:error, _what} ->
+        conn
         |> put_flash(:error, "Can't change directory to #{dirs}.")
         |> redirect(to: ~p"/dir")
     end
@@ -53,7 +57,11 @@ defmodule TalarWeb.DirectoryController do
     render(conn, :new, changeset: changeset, parent_dir: dirs, directory_id: directory_id)
   end
 
-  def create(conn, %{"directory" => directory_params, "parent_dir" => parent_dir, "directory_id" => directory_id}) do
+  def create(conn, %{
+        "directory" => directory_params,
+        "parent_dir" => parent_dir,
+        "directory_id" => directory_id
+      }) do
     # IO.puts("PARENT DIR: #{inspect(parent_dir)}")
 
     case Paths.create_directory(directory_params) do
@@ -63,10 +71,13 @@ defmodule TalarWeb.DirectoryController do
         |> redirect(to: "/dir#{parent_dir}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :new, changeset: changeset, parent_dir: parent_dir, directory_id: directory_id)
+        render(conn, :new,
+          changeset: changeset,
+          parent_dir: parent_dir,
+          directory_id: directory_id
+        )
     end
   end
-
 
   def edit(conn, %{"id" => id}) do
     directory = Paths.get_directory!(id)

@@ -19,12 +19,10 @@ defmodule TalarWeb.Router do
     pipe_through :browser
 
     get "/", SessionsController, :new
-    resources "/sessions", SessionsController,
-      only: [:new, :create, :delete]
+    resources "/sessions", SessionsController, only: [:new, :create, :delete]
     resources "/users", UserController
     # get "/signup", UserController, :new, as: :signup
-    resources "/directories", DirectoryController,
-      only: [:new, :edit, :delete, :update, :create]
+    resources "/directories", DirectoryController, only: [:new, :edit, :delete, :update, :create]
     get "/dir/*dir", DirectoryController, :list_directory
   end
 

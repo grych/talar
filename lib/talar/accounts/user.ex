@@ -6,6 +6,7 @@ defmodule Talar.Accounts.User do
     field :name, :string
     field :email, :string
     field :password_hash, :string
+    has_many :groups, Talar.Accounts.Group
 
     timestamps(type: :utc_datetime)
 
@@ -22,7 +23,7 @@ defmodule Talar.Accounts.User do
     user
     |> cast(attrs, @required_fields)
     |> validate_required(@required_fields)
-    |> validate_length(:name, max: 50)
+    |> validate_length(:name, min: 1, max: 50)
     |> validate_length(:email, max: 255)
     |> validate_format(:email, @valid_email_regex)
     |> update_change(:email, &String.downcase/1)

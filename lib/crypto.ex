@@ -9,13 +9,13 @@ defmodule Talar.Crypto do
   Encrypt the given `data` with AES-256 in CBC mode using given key and `iv`
   PKCS#7 padding will be added to `data`
   """
-  def encrypt(plain_text, key) do
+  def encrypt(text, key) do
     secret_key_hash = make_hash(key, 32)
 
     # create Initialisation Vector
     iv = :crypto.strong_rand_bytes(@block_size)
 
-    padded_text = pad_pkcs7(plain_text, @block_size)
+    padded_text = pad_pkcs7(text, @block_size)
     encrypted_text = :crypto.crypto_one_time(:aes_256_cbc, secret_key_hash, iv, padded_text, true)
 
     # concatenate IV for decryption

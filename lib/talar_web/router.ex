@@ -23,6 +23,7 @@ defmodule TalarWeb.Router do
     resources "/users", UserController
     # get "/signup", UserController, :new, as: :signup
     resources "/directories", DirectoryController, only: [:new, :edit, :delete, :update, :create]
+    resources "/passwords", PasswordController, only: [:new, :create]
     get "/dir/*dir", DirectoryController, :list_directory
   end
 

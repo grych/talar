@@ -7,6 +7,7 @@ defmodule Talar.Paths do
   alias Talar.Repo
 
   alias Talar.Paths.Directory
+  alias Talar.Paths.Password
 
   @doc """
   Returns the list of directories.
@@ -213,5 +214,36 @@ defmodule Talar.Paths do
   """
   def change_directory(%Directory{} = directory, attrs \\ %{}) do
     Directory.changeset(directory, attrs)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking password changes.
+
+  ## Examples
+
+      iex> change_password(password)
+      %Ecto.Changeset{data: %Password{}}
+
+  """
+  def change_password(%Password{} = password, attrs \\ %{}) do
+    Password.changeset(password, attrs)
+  end
+
+  @doc """
+  Creates a password.
+
+  ## Examples
+
+      iex> create_password(%{field: value})
+      {:ok, %Password{}}
+
+      iex> create_password(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_password(attrs \\ %{}) do
+    %Password{}
+    |> Password.changeset(attrs)
+    |> Repo.insert()
   end
 end

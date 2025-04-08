@@ -37,7 +37,8 @@ defmodule TalarWeb.DirectoryController do
     case Paths.list_directory(dirs) do
       {:ok, id} ->
         directory = Paths.list_directories(id)
-        render(conn, :list_directory, directories: directory, parent_dir: dirs, directory_id: id)
+        password = Paths.list_passwords(id)
+        render(conn, :list_directory, directories: directory, passwords: password, parent_dir: dirs, directory_id: id)
 
       {:error, _what} ->
         conn

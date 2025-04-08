@@ -246,4 +246,23 @@ defmodule Talar.Paths do
     |> Password.changeset(attrs)
     |> Repo.insert()
   end
+
+  @doc """
+  Returns the list of password on directory ID.
+
+  ## Examples
+
+      iex> list_passwords(directory_id)
+      [%Password{}, ...]
+
+  """
+  def list_passwords(directory_id) do
+    query =
+      from p in Password,
+        where: p.directory_id == ^directory_id,
+        select: [:id, :password_name, :directory_id]
+
+    Repo.all(query)
+  end
+
 end

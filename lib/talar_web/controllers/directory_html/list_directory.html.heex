@@ -16,7 +16,7 @@
   rows={@directories}
   row_click={&JS.navigate("/dir#{@parent_dir}/#{&1.directory_name}")}
 >
-  <:col :let={directory} label="Name">{directory.directory_name}</:col>
+  <:col :let={directory}>{directory.directory_name}/</:col>
   <:action :let={directory}>
     <div class="sr-only">
       <.link navigate={"/dir#{@parent_dir}/#{directory.directory_name}"}>Show</.link>
@@ -36,4 +36,11 @@
       Delete
     </.link>
   </:action>
+</.table>
+
+<.table
+  id="directories"
+  rows={@passwords}
+>
+  <:col :let={password}>{password.password_name}</:col>
 </.table>

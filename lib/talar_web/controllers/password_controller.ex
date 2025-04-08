@@ -6,6 +6,20 @@ defmodule TalarWeb.PasswordController do
 
   import Ecto.Query, warn: false
 
+  plug :authenticate
+       when action in [:new, :create]
+
+  defp authenticate(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page")
+      |> redirect(to: ~p"/sessions/new")
+      |> halt()
+    end
+  end
+
   def new(conn, params) do
     %{"parent_dir" => dirs, "directory_id" => directory_id} = params
     changeset = Paths.change_password(%Password{})

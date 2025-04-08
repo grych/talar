@@ -3,7 +3,7 @@ defmodule Talar.Repo.Migrations.CreatePasswords do
 
   def change do
     create table(:passwords) do
-      add :password_name, :string
+      add :password_name, :string, size: 4096
 
       timestamps(type: :utc_datetime)
     end

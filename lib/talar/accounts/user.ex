@@ -6,6 +6,8 @@ defmodule Talar.Accounts.User do
     field :name, :string
     field :email, :string
     field :password_hash, :string
+    field :admin, :boolean, default: false
+
     # has_many :groups, Talar.Accounts.Group
     has_many :groups, Talar.GroupsPasswordsUsers
     has_many :passwords, Talar.GroupsPasswordsUsers

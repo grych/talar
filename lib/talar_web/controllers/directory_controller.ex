@@ -20,17 +20,17 @@ defmodule TalarWeb.DirectoryController do
     end
   end
 
-  def list_directory(conn, params) do
+  def list_directory(conn, %{"dir" => dir_list}) do
     # so params have a "dir" inside:
     #     %{"dir" => ["vaiue1", "value2"]}
-    %{"dir" => dir_list} = params
+    # %{"dir" => dir_list} = params
     # so we take the dir list, and then move it to the dirs string
-    dirs =
-      if dir_list == [] do
-        "/"
-      else
-        "/" <> Enum.join(dir_list, "/")
-      end
+    dirs = "/" <> Enum.join(dir_list, "/")
+      # if dir_list == [] do
+      #   "/"
+      # else
+      #   "/" <> Enum.join(dir_list, "/")
+      # end
 
     # IO.inspect(dirs)
 

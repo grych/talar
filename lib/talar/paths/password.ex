@@ -18,5 +18,6 @@ defmodule Talar.Paths.Password do
     password
     |> cast(attrs, [:password_name, :directory_id])
     |> validate_required([:password_name, :directory_id])
+    |> unique_constraint([:directory_id, :password_name])
   end
 end
